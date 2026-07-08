@@ -1,7 +1,35 @@
 html,
 body {
-  padding: 0;
+  padding: 150px;
   margin: 0;
+  background-color: rgb(57, 0, 121);
+}
+
+#todoContainer {
+  background-color: rgb(124, 0, 195);
+  border-radius: 10px;
+  color: white;
+  padding: 20px;
+  width: 400px;
+  margin: 0 auto;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+#add-todo-button {
+  background-color: rgb(57, 0, 121);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#todo-input {
+  padding: 10px;
+  border-radius: 5px;
+  border: none;
+  width: calc(100% - 140px);
+  margin-right: 10px;
 }
 
 * {
