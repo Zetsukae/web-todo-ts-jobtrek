@@ -1,5 +1,7 @@
 html,
 body {
+  display: flex;
+  justify-content: center;
   padding: 150px;
   margin: 0;
   background-color: rgb(57, 0, 121);
@@ -16,7 +18,7 @@ body {
   border-radius: 10px;
   color: white;
   padding: 20px;
-  width: 400px;
+  width: 800px;
   margin: 0 auto;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
@@ -52,6 +54,9 @@ body {
 #todo-elements {
   list-style-type: none;
   padding: 0;
+  overflow-wrap: break-word;
+  max-width: 100%;
+  white-space: normal;
 }
 
 /* Style for Checkbox, Optionnal but added so it adapt the global style */
@@ -62,7 +67,6 @@ input[type="checkbox"] {
   margin-right: 2%;
   width: 20px;
   height: 20px;
-  border: 2px solid #ccc;
   border-radius: 4px;
   background-color: #fff;
   cursor: pointer;
@@ -95,6 +99,28 @@ input[type="checkbox"]:checked::before {
 
 * {
   font-family: Helvetica, Arial, sans-serif;
+}
+
+.delete-btn {
+  background-color: #ffffff;
+  color: rgb(0, 0, 0);
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  display: inline-grid;
+  place-content: center;
+  vertical-align: middle;
+}
+
+.delete-btn:hover {
+  background-color: rgb(248, 0, 111);
+  color: white;
+  height: 20px;
+  width: 20px;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 /* Optionnal but make the UX better :} Lancer was here */

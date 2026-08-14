@@ -30,9 +30,18 @@ todos.forEach((todo) => {
   checkbox.type = 'checkbox'
   const todoSpan = document.createElement('span')
   todoSpan.textContent = todo.text
+  const deleteButton = document.createElement('button')
+  deleteButton.textContent = '✕'
+  deleteButton.classList.add('delete-btn')
+  deleteButton.addEventListener('click', () => {
+    todos = todos.filter((t) => t !== todo)
+    localStorage.setItem('todos', JSON.stringify(todos))
+    li.remove()
+  })
 
   checkbox.checked = todo.completed
 
+  li.appendChild(deleteButton)
   li.appendChild(checkbox)
   li.appendChild(todoSpan)
   todoElements.appendChild(li)
@@ -40,7 +49,7 @@ todos.forEach((todo) => {
   checkbox.addEventListener('change', () => {
     todo.completed = checkbox.checked
     localStorage.setItem('todos', JSON.stringify(todos))
-  }) // [66] Bug IK : When create a todo and check it, and refresh, it doesn't save the state. We need to reload, recheck it and then it saves :ü
+  }) // [75] Bug IK : When create a todo and check it, and refresh, it doesn't save the state. We need to reload, recheck it and then it saves :ü
 })
 
 addTodoButton.addEventListener('click', () => {
@@ -63,7 +72,7 @@ addTodoButton.addEventListener('click', () => {
 
     todos.push({ text: todoText, completed: false })
     localStorage.setItem('todos', JSON.stringify(todos))
-    window.location.reload() // [43] temporary fix for the bug, will be fixed in the next update
+    window.location.reload() // [52] temporary fix for the bug, will be fixed in the next update
   } else {
     errorMessage.textContent =
       "Please enter something to-do. You can't do nothing about your life. . ."
