@@ -12,6 +12,7 @@ const todoElements = document.getElementById(
 const errorMessage = document.getElementById(
   'error-message',
 ) as HTMLParagraphElement
+const deleteAllButton = document.getElementById('delete-all') as HTMLButtonElement
 
 interface Todo {
   text: string
@@ -81,5 +82,11 @@ addTodoButton.addEventListener('click', () => {
     errorMessage.offsetWidth
     errorMessage.classList.add('shake')
   }
+})
+
+deleteAllButton.addEventListener('click', () => {
+  todos = []
+  localStorage.removeItem('todos')
+  todoElements.innerHTML = ''
 })
 // Rasiel was here ;} RK too :]
