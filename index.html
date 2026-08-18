@@ -9,11 +9,12 @@
   <body>
     <div id="todoContainer">
       <h1>Web todolist app</h1>
-      <p id="error-message" class="shake"></p>
+      <span id="error-message" class="shake"></span>
       <input id="todo-input" type="text" placeholder="Enter a new to-do" />
+      <input type="date" id="todo-date-input" />
       <button type="button" id="add-todo-button">Add To-do</button>
       <ul id="todo-elements"></ul>
-      <button id="delete-all">Delete All</button>
+      <button type="button" id="delete-all">Delete All</button>
     </div>
   </body>
   <script type="module" src="/src/main.ts"></script>

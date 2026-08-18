@@ -7,6 +7,20 @@ body {
   background-color: rgb(57, 0, 121);
 }
 
+p {
+  display: inline-block;
+  white-space: nowrap;
+  border-radius: 5px;
+  background-color: #f8f6f6d0;
+  color: black;
+  font-size: 12px;
+  height: 20px;
+  line-height: 20px;
+  vertical-align: middle;
+  padding: 0 5px;
+}
+
+/* Damur was found here */
 #todo-elements li input[type="checkbox"]:checked + span {
   text-decoration: line-through;
   color: #b3b3b3;
@@ -40,13 +54,27 @@ body {
   padding: 10px;
   border-radius: 5px;
   border: none;
-  width: calc(100% - 140px);
+  width: calc(100% - 290px);
   margin-right: 10px;
   border-color: #bf21f3;
   outline: none;
 }
 
 #todo-input:focus {
+  background-color: #ffffff;
+  box-shadow: 0 0 0 4px rgb(204, 0, 201);
+}
+
+#todo-date-input {
+  padding: 10px;
+  border-radius: 5px;
+  border: none;
+  border-color: #bf21f3;
+  outline: none;
+  margin-right: 10px;
+}
+
+#todo-date-input:focus {
   background-color: #ffffff;
   box-shadow: 0 0 0 4px rgb(204, 0, 201);
 }
@@ -64,7 +92,6 @@ input[type="checkbox"] {
   -webkit-appearance: none;
   appearance: none;
 
-  margin-right: 2%;
   width: 20px;
   height: 20px;
   border-radius: 4px;
@@ -102,6 +129,7 @@ input[type="checkbox"]:checked::before {
 }
 
 .delete-btn {
+  margin-right: 4px;
   background-color: #ffffff;
   color: rgb(0, 0, 0);
   width: 20px;
@@ -134,7 +162,7 @@ input[type="checkbox"]:checked::before {
   place-content: center;
   vertical-align: middle;
   padding: 10px 20px;
-  margin-left: 44%
+  margin: 5% 0 0 44%;
 }
 
 #delete-all:hover {

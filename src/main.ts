@@ -2,6 +2,10 @@ import './style.css'
 
 console.log('Hello from typescript')
 
+// Get references to the HTML elements
+const todoDateInput = document.getElementById(
+  'todo-date-input',
+) as HTMLInputElement
 const addTodoButton = document.getElementById(
   'add-todo-button',
 ) as HTMLButtonElement
@@ -12,11 +16,15 @@ const todoElements = document.getElementById(
 const errorMessage = document.getElementById(
   'error-message',
 ) as HTMLParagraphElement
-const deleteAllButton = document.getElementById('delete-all') as HTMLButtonElement
+const deleteAllButton = document.getElementById(
+  'delete-all',
+) as HTMLButtonElement
 
+// Define the Todo interface (LS)
 interface Todo {
   text: string
   completed: boolean
+  date: string | null
 }
 
 let todos: Todo[] = []
@@ -25,12 +33,25 @@ if (savedTodos) {
   todos = JSON.parse(savedTodos)
 }
 
+// Display the todos on page load
 todos.forEach((todo) => {
+  const p = document.createElement('p')
+
+  if (todo.date) {
+    const timeElement = document.createElement('time')
+    timeElement.dateTime = todo.date
+    timeElement.textContent = todo.date
+    p.appendChild(timeElement)
+  } else {
+    p.textContent = 'no due date'
+  }
+
   const li = document.createElement('li')
   const checkbox = document.createElement('input')
   checkbox.type = 'checkbox'
   const todoSpan = document.createElement('span')
   todoSpan.textContent = todo.text
+
   const deleteButton = document.createElement('button')
   deleteButton.textContent = '✕'
   deleteButton.classList.add('delete-btn')
@@ -42,7 +63,9 @@ todos.forEach((todo) => {
 
   checkbox.checked = todo.completed
 
+  // Append elements to the list item and then to the todoElements
   li.appendChild(deleteButton)
+  li.appendChild(p)
   li.appendChild(checkbox)
   li.appendChild(todoSpan)
   todoElements.appendChild(li)
@@ -50,43 +73,42 @@ todos.forEach((todo) => {
   checkbox.addEventListener('change', () => {
     todo.completed = checkbox.checked
     localStorage.setItem('todos', JSON.stringify(todos))
-  }) // [75] Bug IK : When create a todo and check it, and refresh, it doesn't save the state. We need to reload, recheck it and then it saves :ü
+  })
 })
 
 addTodoButton.addEventListener('click', () => {
   const todoText = todoInput.value.trim()
+  const todoDate = todoDateInput.value.trim()
+  const today = new Date().toISOString().split('T')[0]
+
+  // Validate the input and add the new todo
   if (todoText) {
-    const li = document.createElement('li')
-    const checkbox = document.createElement('input')
-    checkbox.type = 'checkbox'
-    const todoSpan = document.createElement('span')
-    todoSpan.textContent = todoText
+    if (todoDate && todoDate < today) {
+      errorMessage.textContent =
+        "You can't go to the past. . . It would be cool if you could, but you can't. . ."
+      errorMessage.classList.add('show', 'shake')
+      return
+    }
 
-    li.appendChild(checkbox)
-    li.appendChild(todoSpan)
-    todoElements.appendChild(li)
+    const finalDate = todoDate !== '' ? todoDate : null
 
-    todoInput.value = ''
+    todos.push({ text: todoText, completed: false, date: finalDate })
+    localStorage.setItem('todos', JSON.stringify(todos))
 
     errorMessage.textContent = ''
     errorMessage.classList.remove('show')
-
-    todos.push({ text: todoText, completed: false })
-    localStorage.setItem('todos', JSON.stringify(todos))
-    window.location.reload() // [52] temporary fix for the bug, will be fixed in the next update
+    window.location.reload()
   } else {
-    errorMessage.textContent =
-      "Please enter something to-do. You can't do nothing about your life. . ."
-    errorMessage.classList.add('show')
-    errorMessage.classList.remove('shake')
-    errorMessage.offsetWidth
-    errorMessage.classList.add('shake')
+    errorMessage.textContent = "Please enter both a to-do and a date. You can't do nothing about your life. . ."
+    errorMessage.classList.add('show', 'shake')
   }
 })
 
 deleteAllButton.addEventListener('click', () => {
   todos = []
+
   localStorage.removeItem('todos')
+
   todoElements.innerHTML = ''
 })
 // Rasiel was here ;} RK too :]
