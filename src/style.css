@@ -7,24 +7,36 @@ body {
   background-color: rgb(57, 0, 121);
 }
 
-p {
+[class^="date-"] {
+  background-color: rgba(255, 255, 255, 0.704);
+  border-radius: 6px;
+  padding: 2px 6px;
   display: inline-block;
-  white-space: nowrap;
-  border-radius: 5px;
-  background-color: #f8f6f6d0;
-  color: black;
-  font-size: 12px;
-  height: 20px;
-  line-height: 20px;
-  vertical-align: middle;
-  padding: 0 5px;
+  font-size: 14px;
+  font-weight: 600;
 }
 
-/* Damur was found here */
-#todo-elements li input[type="checkbox"]:checked + span {
-  text-decoration: line-through;
-  color: #b3b3b3;
-  transition: 0.3s ease-in;
+.date-overdue {
+  background-color: red;
+}
+
+.date-today {
+  background-color: orange;
+}
+
+.date-this-week {
+  background-color: rgb(196, 196, 0);
+}
+
+.date-future {
+  background-color: rgb(2, 204, 2);
+}
+
+.date-no-due {
+  display: inline-block;
+  font-size: 12px;
+  background-color: rgba(255, 255, 255, 0.704);
+  color: #3a2a4d;
 }
 
 #todoContainer {
@@ -32,9 +44,17 @@ p {
   border-radius: 10px;
   color: white;
   padding: 20px;
-  width: 800px;
+  width: 1000px;
   margin: 0 auto;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+#todo-list {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 #add-todo-button {
@@ -87,6 +107,26 @@ p {
   white-space: normal;
 }
 
+#todo-elements li {
+  display: grid;
+  grid-template-columns: auto auto 1fr auto;
+  align-items: center;
+  width: 100%;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+#todo-elements li > span {
+  overflow-wrap: anywhere;
+}
+
+/* Damur was found here */
+#todo-elements li input[type="checkbox"]:checked + span {
+  text-decoration: line-through;
+  color: #b3b3b3;
+  transition: 0.3s ease-in;
+}
+
 /* Style for Checkbox, Optionnal but added so it adapt the global style */
 input[type="checkbox"] {
   -webkit-appearance: none;
@@ -129,7 +169,6 @@ input[type="checkbox"]:checked::before {
 }
 
 .delete-btn {
-  margin-right: 4px;
   background-color: #ffffff;
   color: rgb(0, 0, 0);
   width: 20px;
@@ -140,21 +179,21 @@ input[type="checkbox"]:checked::before {
   display: inline-grid;
   place-content: center;
   vertical-align: middle;
+  flex-shrink: 0;
+  justify-self: end;
+  margin-left: 0;
 }
 
 .delete-btn:hover {
   background-color: rgb(248, 0, 111);
   color: white;
-  height: 20px;
-  width: 20px;
-  border-radius: 5px;
-  cursor: pointer;
 }
 
 #delete-all {
   background-color: #ffffff;
   color: rgb(0, 0, 0);
   height: 25px;
+  width: 100px;
   border-radius: 5px;
   border: none;
   cursor: pointer;
@@ -162,7 +201,7 @@ input[type="checkbox"]:checked::before {
   place-content: center;
   vertical-align: middle;
   padding: 10px 20px;
-  margin: 5% 0 0 44%;
+  margin: 5% 44% 0 44%;
 }
 
 #delete-all:hover {

@@ -10,7 +10,7 @@ const addTodoButton = document.getElementById(
   'add-todo-button',
 ) as HTMLButtonElement
 const todoInput = document.getElementById('todo-input') as HTMLInputElement
-const todoElements = document.getElementById(
+const todoListContainer = document.getElementById(
   'todo-elements',
 ) as HTMLUListElement
 const errorMessage = document.getElementById(
@@ -33,6 +33,36 @@ if (savedTodos) {
   todos = JSON.parse(savedTodos)
 }
 
+// change color on due date
+const getDueDateClass = (dateString: string): string | null => {
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+
+  const dueDate = new Date(`${dateString}T00:00:00`)
+  dueDate.setHours(0, 0, 0, 0)
+
+  const diffTime = dueDate.getTime() - today.getTime()
+  const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24))
+
+  if (diffDays < 0) {
+    return 'date-overdue'
+  }
+
+  if (diffDays === 0) {
+    return 'date-today'
+  }
+
+  if (diffDays >= 2 && diffDays <= 4) {
+    return 'date-this-week'
+  }
+
+  if (diffDays > 4) {
+    return 'date-future'
+  }
+
+  return null
+}
+
 // Display the todos on page load
 todos.forEach((todo) => {
   const p = document.createElement('p')
@@ -41,9 +71,14 @@ todos.forEach((todo) => {
     const timeElement = document.createElement('time')
     timeElement.dateTime = todo.date
     timeElement.textContent = todo.date
+    const dueDateClass = getDueDateClass(todo.date)
+    if (dueDateClass) {
+      timeElement.classList.add(dueDateClass)
+    }
     p.appendChild(timeElement)
   } else {
-    p.textContent = 'no due date'
+    p.classList.add('date-no-due')
+    p.textContent = 'No due date'
   }
 
   const li = document.createElement('li')
@@ -64,11 +99,11 @@ todos.forEach((todo) => {
   checkbox.checked = todo.completed
 
   // Append elements to the list item and then to the todoElements
-  li.appendChild(deleteButton)
   li.appendChild(p)
   li.appendChild(checkbox)
   li.appendChild(todoSpan)
-  todoElements.appendChild(li)
+  li.appendChild(deleteButton)
+  todoListContainer.appendChild(li)
 
   checkbox.addEventListener('change', () => {
     todo.completed = checkbox.checked
@@ -99,7 +134,8 @@ addTodoButton.addEventListener('click', () => {
     errorMessage.classList.remove('show')
     window.location.reload()
   } else {
-    errorMessage.textContent = "Please enter both a to-do and a date. You can't do nothing about your life. . ."
+    errorMessage.textContent =
+      "Please enter both a to-do and a date. You can't do nothing about your life. . ."
     errorMessage.classList.add('show', 'shake')
   }
 })
@@ -109,6 +145,6 @@ deleteAllButton.addEventListener('click', () => {
 
   localStorage.removeItem('todos')
 
-  todoElements.innerHTML = ''
+  todoListContainer.innerHTML = ''
 })
 // Rasiel was here ;} RK too :]
