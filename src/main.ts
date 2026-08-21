@@ -16,6 +16,9 @@ const todoListContainer = document.getElementById(
 const errorMessage = document.getElementById(
   'error-message',
 ) as HTMLParagraphElement
+const errorMessagePriority = document.getElementById(
+  'overdue-message',
+) as HTMLParagraphElement
 const deleteAllButton = document.getElementById(
   'delete-all',
 ) as HTMLButtonElement
@@ -33,8 +36,33 @@ if (savedTodos) {
   todos = JSON.parse(savedTodos)
 }
 
+// Function to manage the global display of the overdue message
+const updateOverdueMessage = () => {
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+
+  const hasOverdueTasks = todos.some((todo) => {
+    if (!todo.date || todo.completed) return false
+    const dueDate = new Date(`${todo.date}T00:00:00`)
+    dueDate.setHours(0, 0, 0, 0)
+    return dueDate.getTime() < today.getTime()
+  })
+
+  if (hasOverdueTasks) {
+    errorMessagePriority.classList.add('show', 'overdue-message')
+    errorMessagePriority.textContent = "Please do the overdue task(s)! Use your time wisely. . ."
+  } else {
+    errorMessagePriority.classList.remove('show', 'overdue-message')
+    errorMessagePriority.textContent = ""
+  }
+}
+
 // change color on due date
-const getDueDateClass = (dateString: string): string | null => {
+const getDueDateClass = (dateString: string, completed: boolean): string | null => {
+  if (completed) {
+    return 'date-no-due'
+  }
+
   const today = new Date()
   today.setHours(0, 0, 0, 0)
 
@@ -71,7 +99,7 @@ todos.forEach((todo) => {
     const timeElement = document.createElement('time')
     timeElement.dateTime = todo.date
     timeElement.textContent = todo.date
-    const dueDateClass = getDueDateClass(todo.date)
+    const dueDateClass = getDueDateClass(todo.date, todo.completed)
     if (dueDateClass) {
       timeElement.classList.add(dueDateClass)
     }
@@ -94,6 +122,7 @@ todos.forEach((todo) => {
     todos = todos.filter((t) => t !== todo)
     localStorage.setItem('todos', JSON.stringify(todos))
     li.remove()
+    updateOverdueMessage() // Update the message instantly when a task is deleted
   })
 
   checkbox.checked = todo.completed
@@ -108,8 +137,12 @@ todos.forEach((todo) => {
   checkbox.addEventListener('change', () => {
     todo.completed = checkbox.checked
     localStorage.setItem('todos', JSON.stringify(todos))
+    updateOverdueMessage() // Update the message instantly when a task is checked/unchecked
   })
 })
+
+// Initial check on page load
+updateOverdueMessage()
 
 addTodoButton.addEventListener('click', () => {
   const todoText = todoInput.value.trim()
@@ -142,9 +175,8 @@ addTodoButton.addEventListener('click', () => {
 
 deleteAllButton.addEventListener('click', () => {
   todos = []
-
   localStorage.removeItem('todos')
-
   todoListContainer.innerHTML = ''
+  updateOverdueMessage() // Update the message instantly when all tasks are deleted
 })
 // Rasiel was here ;} RK too :]

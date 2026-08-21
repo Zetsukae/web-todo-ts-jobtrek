@@ -39,6 +39,26 @@ body {
   color: #3a2a4d;
 }
 
+.overdue-message {
+  background-color: rgba(255, 0, 0, 0.8);
+  color: rgb(253, 253, 253);
+  border-radius: 5px;
+  padding: 10px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+#overdue-message.show {
+  display: block;
+  animation: fadeIn 0.3s ease-in forwards;
+}
+
+#overdue-message.shake {
+  animation: shake 0.2s ease-in-out;
+}
+
 #todoContainer {
   background-color: rgb(124, 0, 195);
   border-radius: 10px;
