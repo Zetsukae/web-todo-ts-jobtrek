@@ -141,6 +141,10 @@ todos.forEach((todo) => {
   checkbox.addEventListener('change', () => {
     todo.completed = checkbox.checked
     localStorage.setItem('todos', JSON.stringify(todos))
+    const timeElement = li.querySelector('time')
+    if (timeElement && todo.date) {
+      timeElement.className = getDueDateClass(todo.date, todo.completed) ?? ''
+    }
     updateOverdueMessage() // Update the message instantly when a task is checked/unchecked
   })
 })
@@ -151,7 +155,10 @@ updateOverdueMessage()
 addTodoButton.addEventListener('click', () => {
   const todoText = todoInput.value.trim()
   const todoDate = todoDateInput.value.trim()
-  const today = new Date().toISOString().split('T')[0]
+  const now = new Date()
+  const today = new Date(now.getTime() - now.getTimezoneOffset() * 60_000)
+    .toISOString()
+    .split('T')[0]
 
   // Validate the input and add the new todo
   if (todoText) {
