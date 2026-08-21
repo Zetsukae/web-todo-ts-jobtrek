@@ -8,18 +8,25 @@
   </head>
   <body>
     <div id="todoContainer">
-      <h1>Web todolist app</h1>
+      <h1 id="web-title">Web todolist app</h1>
         <p id="overdue-message" class="shake"></p>
         <p id="error-message" class="shake"></p>
-        <input id="todo-input" type="text" placeholder="Enter a new to-do" />
-        <input type="date" id="todo-date-input" />
-        <button type="button" id="add-todo-button">Add To-do</button>
+        <div id="todo-fill">
+          <input id="todo-input" type="text" placeholder="Enter a new to-do" />
+          <input type="date" id="todo-date-input" />
+          <button type="button" id="add-todo-button">Add To-do</button>
+        </div>
       <div id="todo-list">
         <ul id="todo-elements"></ul>
       </div>
       <button type="button" id="delete-all">Delete All</button>
     </div>
   </body>
+  <footer id="deamur">
+    <p>7etsukae</p>
+    <p>| You should try </p>
+    <a href="https://underfang.com">Underfang</a>
+  </footer>
   <script type="module" src="/src/main.ts"></script>
 </html>
 <!-- Leax was here. -->

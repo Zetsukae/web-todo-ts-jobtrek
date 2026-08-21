@@ -1,4 +1,8 @@
 import './style.css'
+import { createTodoElement } from './components/todoItem'
+import { clearStoredTodos, getStoredTodos, saveTodos } from './servcies/storage'
+import type { Todo } from './types/todo'
+import { checkHasOverdueTasks, getTodayString } from './utils/date'
 
 console.log('Hello from typescript')
 
@@ -23,32 +27,11 @@ const deleteAllButton = document.getElementById(
   'delete-all',
 ) as HTMLButtonElement
 
-// Define the Todo interface (LS)
-interface Todo {
-  text: string
-  completed: boolean
-  date: string | null
-}
+// Local State
+let todos: Todo[] = getStoredTodos()
 
-let todos: Todo[] = []
-const savedTodos = localStorage.getItem('todos')
-if (savedTodos) {
-  todos = JSON.parse(savedTodos)
-}
-
-// Function to manage the global display of the overdue message
 const updateOverdueMessage = () => {
-  const today = new Date()
-  today.setHours(0, 0, 0, 0)
-
-  const hasOverdueTasks = todos.some((todo) => {
-    if (!todo.date || todo.completed) return false
-    const dueDate = new Date(`${todo.date}T00:00:00`)
-    dueDate.setHours(0, 0, 0, 0)
-    return dueDate.getTime() < today.getTime()
-  })
-
-  if (hasOverdueTasks) {
+  if (checkHasOverdueTasks(todos)) {
     errorMessagePriority.classList.add('show', 'overdue-message')
     errorMessagePriority.textContent =
       'Please do the overdue task(s)! Use your time wisely. . .'
@@ -58,109 +41,38 @@ const updateOverdueMessage = () => {
   }
 }
 
-// change color on due date
-const getDueDateClass = (
-  dateString: string,
-  completed: boolean,
-): string | null => {
-  if (completed) {
-    return 'date-no-due'
-  }
+const renderTodos = () => {
+  todoListContainer.innerHTML = ''
 
-  const today = new Date()
-  today.setHours(0, 0, 0, 0)
+  todos.forEach((todo) => {
+    const todoElement = createTodoElement(
+      todo,
+      (idToDelete) => {
+        todos = todos.filter((t) => t.id !== idToDelete)
+        saveTodos(todos)
+        renderTodos()
+      },
+      (idToToggle, completed) => {
+        const target = todos.find((t) => t.id === idToToggle)
+        if (target) {
+          target.completed = completed
+          saveTodos(todos)
+          renderTodos()
+        }
+      },
+    )
+    todoListContainer.appendChild(todoElement)
+  })
 
-  const dueDate = new Date(`${dateString}T00:00:00`)
-  dueDate.setHours(0, 0, 0, 0)
-
-  const diffTime = dueDate.getTime() - today.getTime()
-  const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24))
-
-  if (diffDays < 0) {
-    return 'date-overdue'
-  }
-
-  if (diffDays === 0) {
-    return 'date-today'
-  }
-
-  if (diffDays >= 2 && diffDays <= 4) {
-    return 'date-this-week'
-  }
-
-  if (diffDays > 4) {
-    return 'date-future'
-  }
-
-  return null
+  updateOverdueMessage()
 }
 
-// Display the todos on page load
-todos.forEach((todo) => {
-  const p = document.createElement('p')
-
-  if (todo.date) {
-    const timeElement = document.createElement('time')
-    timeElement.dateTime = todo.date
-    timeElement.textContent = todo.date
-    const dueDateClass = getDueDateClass(todo.date, todo.completed)
-    if (dueDateClass) {
-      timeElement.classList.add(dueDateClass)
-    }
-    p.appendChild(timeElement)
-  } else {
-    p.classList.add('date-no-due')
-    p.textContent = 'No due date'
-  }
-
-  const li = document.createElement('li')
-  const checkbox = document.createElement('input')
-  checkbox.type = 'checkbox'
-  const todoSpan = document.createElement('span')
-  todoSpan.textContent = todo.text
-
-  const deleteButton = document.createElement('button')
-  deleteButton.textContent = '✕'
-  deleteButton.classList.add('delete-btn')
-  deleteButton.addEventListener('click', () => {
-    todos = todos.filter((t) => t !== todo)
-    localStorage.setItem('todos', JSON.stringify(todos))
-    li.remove()
-    updateOverdueMessage() // Update the message instantly when a task is deleted
-  })
-
-  checkbox.checked = todo.completed
-
-  // Append elements to the list item and then to the todoElements
-  li.appendChild(p)
-  li.appendChild(checkbox)
-  li.appendChild(todoSpan)
-  li.appendChild(deleteButton)
-  todoListContainer.appendChild(li)
-
-  checkbox.addEventListener('change', () => {
-    todo.completed = checkbox.checked
-    localStorage.setItem('todos', JSON.stringify(todos))
-    const timeElement = li.querySelector('time')
-    if (timeElement && todo.date) {
-      timeElement.className = getDueDateClass(todo.date, todo.completed) ?? ''
-    }
-    updateOverdueMessage() // Update the message instantly when a task is checked/unchecked
-  })
-})
-
-// Initial check on page load
-updateOverdueMessage()
-
+// Add events
 addTodoButton.addEventListener('click', () => {
   const todoText = todoInput.value.trim()
   const todoDate = todoDateInput.value.trim()
-  const now = new Date()
-  const today = new Date(now.getTime() - now.getTimezoneOffset() * 60_000)
-    .toISOString()
-    .split('T')[0]
+  const today = getTodayString()
 
-  // Validate the input and add the new todo
   if (todoText) {
     if (todoDate && todoDate < today) {
       errorMessage.textContent =
@@ -171,12 +83,21 @@ addTodoButton.addEventListener('click', () => {
 
     const finalDate = todoDate !== '' ? todoDate : null
 
-    todos.push({ text: todoText, completed: false, date: finalDate })
-    localStorage.setItem('todos', JSON.stringify(todos))
+    todos.push({
+      id: crypto.randomUUID(),
+      text: todoText,
+      completed: false,
+      date: finalDate,
+    })
 
+    saveTodos(todos)
+
+    todoInput.value = ''
+    todoDateInput.value = ''
     errorMessage.textContent = ''
     errorMessage.classList.remove('show')
-    window.location.reload()
+
+    renderTodos()
   } else {
     errorMessage.textContent =
       "Please enter both a to-do and a date. You can't do nothing about your life. . ."
@@ -186,8 +107,9 @@ addTodoButton.addEventListener('click', () => {
 
 deleteAllButton.addEventListener('click', () => {
   todos = []
-  localStorage.removeItem('todos')
-  todoListContainer.innerHTML = ''
-  updateOverdueMessage() // Update the message instantly when all tasks are deleted
+  clearStoredTodos()
+  renderTodos()
 })
-// Rasiel was here ;} RK too :]
+
+// Initial Load
+renderTodos()
