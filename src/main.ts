@@ -147,7 +147,10 @@ updateOverdueMessage()
 addTodoButton.addEventListener('click', () => {
   const todoText = todoInput.value.trim()
   const todoDate = todoDateInput.value.trim()
-  const today = new Date().toISOString().split('T')[0]
+  const now = new Date()
+  const today = new Date(now.getTime() - now.getTimezoneOffset() * 60_000)
+    .toISOString()
+    .split('T')[0]
 
   // Validate the input and add the new todo
   if (todoText) {
