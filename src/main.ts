@@ -50,15 +50,19 @@ const updateOverdueMessage = () => {
 
   if (hasOverdueTasks) {
     errorMessagePriority.classList.add('show', 'overdue-message')
-    errorMessagePriority.textContent = "Please do the overdue task(s)! Use your time wisely. . ."
+    errorMessagePriority.textContent =
+      'Please do the overdue task(s)! Use your time wisely. . .'
   } else {
     errorMessagePriority.classList.remove('show', 'overdue-message')
-    errorMessagePriority.textContent = ""
+    errorMessagePriority.textContent = ''
   }
 }
 
 // change color on due date
-const getDueDateClass = (dateString: string, completed: boolean): string | null => {
+const getDueDateClass = (
+  dateString: string,
+  completed: boolean,
+): string | null => {
   if (completed) {
     return 'date-no-due'
   }
