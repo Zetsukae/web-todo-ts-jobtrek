@@ -1,6 +1,7 @@
 export interface Todo {
-  id: string
-  text: string
-  completed: boolean
-  date: string | null
+  id?: number
+  title: string
+  content?: string | null
+  due_date?: string | null
+  done: boolean
 }

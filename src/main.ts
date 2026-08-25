@@ -1,11 +1,19 @@
-import './style.css'
+import './styles/style.css'
 import { createTodoElement } from './components/todoItem'
-import { clearStoredTodos, getStoredTodos, saveTodos } from './servcies/storage'
+import {
+  createTodoInApi,
+  deleteAllTodosInApi,
+  deleteTodoInApi,
+  getTodosFromApi,
+  updateTodoInApi,
+} from './servcies/storage'
+import { setupTodoPlaceholderAnimation } from './styles/styles'
 import type { Todo } from './types/todo'
 import { checkHasOverdueTasks, getTodayString } from './utils/date'
 
 console.log('Hello from typescript')
 
+let todos: Todo[] = []
 // Get references to the HTML elements
 const todoDateInput = document.getElementById(
   'todo-date-input',
@@ -20,25 +28,29 @@ const todoListContainer = document.getElementById(
 const errorMessage = document.getElementById(
   'error-message',
 ) as HTMLParagraphElement
-const errorMessagePriority = document.getElementById(
+const overdueMessage = document.getElementById(
   'overdue-message',
 ) as HTMLParagraphElement
 const deleteAllButton = document.getElementById(
   'delete-all',
 ) as HTMLButtonElement
 
-// Local State
-let todos: Todo[] = getStoredTodos()
+setupTodoPlaceholderAnimation(todoInput)
 
 const updateOverdueMessage = () => {
-  if (checkHasOverdueTasks(todos)) {
-    errorMessagePriority.classList.add('show', 'overdue-message')
-    errorMessagePriority.textContent =
-      'Please do the overdue task(s)! Use your time wisely. . .'
-  } else {
-    errorMessagePriority.classList.remove('show', 'overdue-message')
-    errorMessagePriority.textContent = ''
-  }
+  overdueMessage.textContent = checkHasOverdueTasks(todos)
+    ? 'Please do the overdue task(s)! Use your time wisely. . .'
+    : ''
+}
+
+const loadingSpinner = document.getElementById('loading-spinner') as HTMLElement
+
+const showLoading = () => {
+  if (loadingSpinner) loadingSpinner.style.display = 'block'
+}
+
+const hideLoading = () => {
+  if (loadingSpinner) loadingSpinner.style.display = 'none'
 }
 
 const renderTodos = () => {
@@ -47,17 +59,21 @@ const renderTodos = () => {
   todos.forEach((todo) => {
     const todoElement = createTodoElement(
       todo,
-      (idToDelete) => {
-        todos = todos.filter((t) => t.id !== idToDelete)
-        saveTodos(todos)
+      async (idToDelete) => {
+        showLoading()
+        await deleteTodoInApi(idToDelete)
+        todos = todos.filter((todoItem) => todoItem.id !== idToDelete)
         renderTodos()
+        hideLoading()
       },
-      (idToToggle, completed) => {
+      async (idToToggle, done) => {
         const target = todos.find((t) => t.id === idToToggle)
         if (target) {
-          target.completed = completed
-          saveTodos(todos)
+          showLoading()
+          await updateTodoInApi(idToToggle, { done })
+          target.done = done
           renderTodos()
+          hideLoading()
         }
       },
     )
@@ -67,8 +83,18 @@ const renderTodos = () => {
   updateOverdueMessage()
 }
 
+const loadTodos = async () => {
+  showLoading()
+  try {
+    todos = await getTodosFromApi()
+    renderTodos()
+  } finally {
+    hideLoading()
+  }
+}
+
 // Add events
-addTodoButton.addEventListener('click', () => {
+addTodoButton.addEventListener('click', async () => {
   const todoText = todoInput.value.trim()
   const todoDate = todoDateInput.value.trim()
   const today = getTodayString()
@@ -83,14 +109,14 @@ addTodoButton.addEventListener('click', () => {
 
     const finalDate = todoDate !== '' ? todoDate : null
 
-    todos.push({
-      id: crypto.randomUUID(),
-      text: todoText,
-      completed: false,
-      date: finalDate,
+    const newTodoFromApi = await createTodoInApi({
+      title: todoText,
+      due_date: finalDate,
+      done: false,
     })
 
-    saveTodos(todos)
+    todos.push(newTodoFromApi)
+    renderTodos()
 
     todoInput.value = ''
     todoDateInput.value = ''
@@ -106,10 +132,10 @@ addTodoButton.addEventListener('click', () => {
 })
 
 deleteAllButton.addEventListener('click', () => {
-  todos = []
-  clearStoredTodos()
-  renderTodos()
+  void deleteAllTodosInApi().then(() => {
+    todos = []
+    renderTodos()
+  })
 })
 
-// Initial Load
-renderTodos()
+void loadTodos()

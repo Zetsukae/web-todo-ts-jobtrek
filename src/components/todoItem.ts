@@ -3,17 +3,17 @@ import { getDueDateClass } from '../utils/date'
 
 export const createTodoElement = (
   todo: Todo,
-  onDelete: (todoId: string) => void,
-  onToggle: (todoId: string, completed: boolean) => void,
+  onDelete: (todoId: number) => void,
+  onToggle: (todoId: number, done: boolean) => void,
 ): HTMLLIElement => {
   const li = document.createElement('li')
   const p = document.createElement('p')
 
-  if (todo.date) {
+  if (todo.due_date) {
     const timeElement = document.createElement('time')
-    timeElement.dateTime = todo.date
-    timeElement.textContent = todo.date
-    const dueDateClass = getDueDateClass(todo.date, todo.completed)
+    timeElement.dateTime = todo.due_date
+    timeElement.textContent = todo.due_date
+    const dueDateClass = getDueDateClass(todo.due_date, todo.done)
     if (dueDateClass) {
       timeElement.classList.add(dueDateClass)
     }
@@ -25,21 +25,21 @@ export const createTodoElement = (
 
   const checkbox = document.createElement('input')
   checkbox.type = 'checkbox'
-  checkbox.checked = todo.completed
+  checkbox.checked = todo.done
 
   const todoSpan = document.createElement('span')
-  todoSpan.textContent = todo.text
+  todoSpan.textContent = todo.title
 
   const deleteButton = document.createElement('button')
   deleteButton.textContent = '✕'
   deleteButton.classList.add('delete-btn')
 
   deleteButton.addEventListener('click', () => {
-    onDelete(todo.id)
+    if (todo.id !== undefined) onDelete(todo.id)
   })
 
   checkbox.addEventListener('change', () => {
-    onToggle(todo.id, checkbox.checked)
+    if (todo.id !== undefined) onToggle(todo.id, checkbox.checked)
   })
 
   li.appendChild(p)
