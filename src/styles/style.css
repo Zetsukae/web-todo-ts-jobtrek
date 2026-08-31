@@ -1,0 +1,322 @@
+* {
+  box-sizing: border-box;
+  font-family:
+    system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  padding: 40px 20px;
+  background-color: #390079;
+  color: #ffffff;
+}
+
+/* This loading spinner is from: https://cssloaders.github.io/ */
+.loading-spinner {
+  --color-1: #fff;
+  --size: 1px;
+
+  width: calc(48 * var(--size));
+  height: calc(48 * var(--size));
+  border-radius: 50%;
+  display: inline-block;
+  border-top: calc(3 * var(--size)) solid var(--color-1);
+  border-right: calc(3 * var(--size)) solid transparent;
+  box-sizing: border-box;
+
+  translate: 713% 0;
+
+  animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/**/
+
+#web-title {
+  text-align: center;
+}
+
+#todoContainer {
+  background-color: #7c00c3;
+  border-radius: 16px;
+  padding: 32px;
+  width: 100%;
+  max-width: 800px;
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.3),
+    0 8px 10px -6px rgba(0, 0, 0, 0.3);
+}
+
+.overdue-message,
+#error-message {
+  display: none;
+  background-color: rgba(239, 68, 68, 0.9);
+  color: #ffffff;
+  border-radius: 8px;
+  padding: 12px 16px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 14px;
+  margin: 20px 0 10px 0;
+}
+
+.overdue-message.show,
+#error-message.show {
+  display: block;
+  animation: fadeIn 0.3s ease-in forwards;
+}
+
+.overdue-message.shake,
+#error-message.shake {
+  animation: shake 0.2s ease-in-out;
+}
+
+#todo-fill {
+  display: flex;
+  gap: 5px;
+  margin: 5px 0 15px 0;
+}
+
+#todo-list {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+#todo-input {
+  flex: 1;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  outline: none;
+  font-size: 15px;
+}
+
+#todo-date-input {
+  padding: 12px;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  outline: none;
+  font-size: 14px;
+}
+
+#todo-input:focus,
+#todo-date-input:focus {
+  background-color: #ffffff;
+  border-color: #bf21f3;
+  box-shadow: 0 0 0 4px rgba(191, 33, 243, 0.3);
+}
+
+#add-todo-button {
+  background-color: #470297;
+  color: #ffffff;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+#add-todo-button:hover {
+  background-color: #5b03bf;
+  box-shadow: 0 0 0 4px rgba(164, 1, 161, 0.4);
+}
+
+#todo-elements {
+  list-style-type: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+#todo-elements li {
+  display: grid;
+  grid-template-columns: auto auto 1fr auto;
+  align-items: center;
+  width: 100%;
+  gap: 10px;
+  margin-bottom: 10px;
+  padding: 12px 16px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(191, 33, 243, 0.4);
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+}
+
+#todo-elements li:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+#todo-elements li > span {
+  text-align: left;
+  overflow-wrap: anywhere;
+  font-size: 15px;
+}
+
+/* Style for Checkbox, Optionnal but added so it adapt the global style */
+input[type="checkbox"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  border: 2px solid #ffffff;
+  border-radius: 6px;
+  background-color: transparent;
+  cursor: pointer;
+  display: inline-grid;
+  place-content: center;
+}
+
+input[type="checkbox"]:checked {
+  background-color: #bf21f3;
+  border-color: #bf21f3;
+}
+
+input[type="checkbox"]::before {
+  content: "";
+  width: 10px;
+  height: 6px;
+  border-left: 2px solid #ffffff;
+  border-bottom: 2px solid #ffffff;
+  transform: rotate(-45deg) translate(1px, -1px);
+  scale: 0;
+}
+
+input[type="checkbox"]:checked::before {
+  scale: 1;
+}
+
+/* Deamur was found here (yeah they're name changed.) */
+#todo-elements li input[type="checkbox"]:checked + span {
+  text-decoration: line-through;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+[class^="date-"] {
+  background-color: rgba(255, 255, 255, 0.85);
+  color: #1a1a1a;
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.date-overdue {
+  background-color: #ef4444;
+  color: #ffffff;
+}
+.date-today {
+  background-color: #f97316;
+  color: #ffffff;
+}
+.date-this-week {
+  background-color: #e1ff00;
+  color: #1a1a1a;
+}
+.date-future {
+  background-color: #22c55e;
+  color: #ffffff;
+}
+.date-no-due {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+
+.delete-btn {
+  background-color: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  display: inline-grid;
+  place-content: center;
+  font-weight: bold;
+}
+
+.delete-btn:hover {
+  background-color: #f43f5e;
+  color: #ffffff;
+}
+
+#delete-all {
+  display: block;
+  margin: 24px auto 0 auto;
+  background-color: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  height: auto;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+#delete-all:hover {
+  background-color: #f43f5e;
+}
+
+#deamur {
+  margin-top: auto;
+  padding-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+#deamur a {
+  color: #bf21f3;
+  text-decoration: underline;
+}
+
+#deamur a:hover {
+  color: #ffffff;
+}
+
+/* Optionnal but make the UX better :} Lancer was here */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20%,
+  60% {
+    transform: translateX(-4px);
+  }
+  40%,
+  80% {
+    transform: translateX(4px);
+  }
+}
