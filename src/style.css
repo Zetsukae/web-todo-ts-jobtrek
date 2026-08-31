@@ -1,9 +1,139 @@
 html,
 body {
-  padding: 0;
+  padding: 150px;
   margin: 0;
+  background-color: rgb(57, 0, 121);
+}
+
+#todo-elements li input[type="checkbox"]:checked + span {
+  text-decoration: line-through;
+  color: #b3b3b3;
+  transition: 0.3s ease-in;
+}
+
+#todoContainer {
+  background-color: rgb(124, 0, 195);
+  border-radius: 10px;
+  color: white;
+  padding: 20px;
+  width: 400px;
+  margin: 0 auto;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+#add-todo-button {
+  background-color: rgb(71, 2, 151);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#add-todo-button:hover {
+  box-shadow: 0 0 0 4px rgb(164, 1, 161);
+}
+
+#todo-input {
+  padding: 10px;
+  border-radius: 5px;
+  border: none;
+  width: calc(100% - 140px);
+  margin-right: 10px;
+  border-color: #bf21f3;
+  outline: none;
+}
+
+#todo-input:focus {
+  background-color: #ffffff;
+  box-shadow: 0 0 0 4px rgb(204, 0, 201);
+}
+
+#todo-elements {
+  list-style-type: none;
+  padding: 0;
+}
+
+/* Style for Checkbox, Optionnal but added so it adapt the global style */
+input[type="checkbox"] {
+  -webkit-appearance: none;
+  appearance: none;
+
+  margin-right: 2%;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  cursor: pointer;
+  display: inline-grid;
+  place-content: center;
+  vertical-align: middle;
+}
+
+input[type="checkbox"]:checked {
+  background-color: #bf21f3;
+  border-color: #8c0bac;
+  transition: 0.1s ease-in;
+}
+
+input[type="checkbox"]::before {
+  content: "";
+  width: 10px;
+  height: 5px;
+  border-left: 2px solid white;
+  border-bottom: 2px solid white;
+  transform: rotate(-45deg) translate(1px, -1px);
+
+  transform-origin: center;
+  scale: 0;
+}
+
+input[type="checkbox"]:checked::before {
+  scale: 1;
 }
 
 * {
   font-family: Helvetica, Arial, sans-serif;
+}
+
+/* Optionnal but make the UX better :} Lancer was here */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+#error-message {
+  display: none;
+}
+
+#error-message.show {
+  display: block;
+  animation: fadeIn 0.3s ease-in forwards;
+}
+
+#error-message.shake {
+  animation: shake 0.2s ease-in-out;
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20%,
+  60% {
+    transform: translateX(-4px);
+  }
+  40%,
+  80% {
+    transform: translateX(4px);
+  }
 }
