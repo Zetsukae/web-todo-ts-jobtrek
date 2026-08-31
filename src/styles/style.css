@@ -185,13 +185,15 @@ body {
   min-width: 0;
 }
 
-#add-todo-button:focus-visible, #add-category-button:focus-visible,
+#add-todo-button:focus-visible,
+#add-category-button:focus-visible,
 #todo-date-input:focus-visible,
 input[type="text"]:focus-visible {
   outline-offset: 2px;
 }
 
-#add-todo-button:hover, #add-category-button:hover {
+#add-todo-button:hover,
+#add-category-button:hover {
   background-color: #5b03bf;
   box-shadow: 0 0 0 4px rgba(164, 1, 161, 0.4);
 }
@@ -402,9 +404,9 @@ input[type="checkbox"]:checked::before {
 
 #category-color-input {
   -webkit-appearance: none; /* Hide native style of Chrome/Safari */
-  -moz-appearance: none;    /* Hide native style of Firefox */
+  -moz-appearance: none; /* Hide native style of Firefox */
   appearance: none;
-  
+
   width: 45px;
   height: 45px;
   border: 2px solid #e2e8f0;
@@ -440,7 +442,6 @@ input[type="checkbox"]:checked::before {
   border: none;
   border-radius: 15%;
 }
-
 
 /* Optionnal but make the UX better :} Lancer was here */
 @keyframes fadeIn {

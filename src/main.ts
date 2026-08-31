@@ -1,19 +1,18 @@
 import './styles/style.css'
 import { createTodoElement } from './components/todoItem'
 import {
+  createCategoryInApi,
   createTodoInApi,
   deleteAllTodosInApi,
   deleteCategoryInApi,
   deleteTodoInApi,
   getCategoriesFromApi,
   getTodosFromApi,
-  createCategoryInApi,
   updateCategoryInApi,
   updateTodoInApi,
 } from './servcies/storage'
 import { setupTodoPlaceholderAnimation } from './styles/styles'
-import type { Todo } from './types/todo'
-import type { Category } from './types/todo'
+import type { Category, Todo } from './types/todo'
 import { checkHasOverdueTasks, getTodayString } from './utils/date'
 
 console.log('Hello from typescript')
