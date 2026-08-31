@@ -6,6 +6,31 @@
   padding: 0;
 }
 
+.contentWrapper {
+  margin-top: 2%;
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+  width: 100%;
+  max-width: 1200px;
+}
+
+input[type="text"] {
+  flex: 1;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  outline: none;
+  font-size: 15px;
+}
+
+input[type="text"]:focus,
+#todo-date-input:focus {
+  background-color: #ffffff;
+  border-color: #bf21f3;
+  box-shadow: 0 0 0 4px rgba(191, 33, 243, 0.3);
+}
+
 body {
   display: flex;
   flex-direction: column;
@@ -29,7 +54,7 @@ body {
   border-right: calc(3 * var(--size)) solid transparent;
   box-sizing: border-box;
 
-  translate: 713% 0;
+  translate: 513% 0;
 
   animation: rotation 1s linear infinite;
 }
@@ -49,7 +74,10 @@ body {
   text-align: center;
 }
 
-#todoContainer {
+#todoContainer,
+#categoryContainer {
+  flex: 1 1 0;
+  min-width: 0;
   background-color: #7c00c3;
   border-radius: 16px;
   padding: 32px;
@@ -61,7 +89,8 @@ body {
 }
 
 .overdue-message,
-#error-message {
+#error-message,
+#error-category {
   display: none;
   background-color: rgba(239, 68, 68, 0.9);
   color: #ffffff;
@@ -74,35 +103,38 @@ body {
 }
 
 .overdue-message.show,
-#error-message.show {
+#error-message.show,
+#error-category.show {
   display: block;
   animation: fadeIn 0.3s ease-in forwards;
 }
 
 .overdue-message.shake,
-#error-message.shake {
+#error-message.shake,
+#error-category.shake {
   animation: shake 0.2s ease-in-out;
 }
 
-#todo-fill {
+#todo-fill,
+#category-fill {
   display: flex;
-  gap: 5px;
-  margin: 5px 0 15px 0;
+  align-items: center;
+  gap: 8px;
+  margin: 24px 0 15px;
+}
+
+#todo-input,
+#todo-date-input,
+#category-btn,
+#add-todo-button,
+#add-category-button {
+  height: 46px;
 }
 
 #todo-list {
   display: flex;
   gap: 10px;
   margin-bottom: 24px;
-}
-
-#todo-input {
-  flex: 1;
-  padding: 12px 16px;
-  border-radius: 8px;
-  border: 2px solid transparent;
-  outline: none;
-  font-size: 15px;
 }
 
 #todo-date-input {
@@ -113,14 +145,33 @@ body {
   font-size: 14px;
 }
 
-#todo-input:focus,
-#todo-date-input:focus {
+#category-btn {
+  display: inline-grid;
+  flex: 0 0 46px;
+  place-items: center;
+  padding: 0;
   background-color: #ffffff;
+  color: #470297;
+  border-radius: 8px;
+  border: 2px solid rgba(255, 255, 255, 0.75);
+  outline: none;
+  cursor: pointer;
+}
+
+#category-btn:hover,
+#category-btn:focus-visible {
   border-color: #bf21f3;
   box-shadow: 0 0 0 4px rgba(191, 33, 243, 0.3);
 }
 
-#add-todo-button {
+.category-icon {
+  display: block;
+  width: 20px;
+  height: 20px;
+}
+
+#add-todo-button,
+#add-category-button {
   background-color: #470297;
   color: #ffffff;
   border: none;
@@ -130,12 +181,23 @@ body {
   cursor: pointer;
 }
 
-#add-todo-button:hover {
+#todo-input {
+  min-width: 0;
+}
+
+#add-todo-button:focus-visible, #add-category-button:focus-visible,
+#todo-date-input:focus-visible,
+input[type="text"]:focus-visible {
+  outline-offset: 2px;
+}
+
+#add-todo-button:hover, #add-category-button:hover {
   background-color: #5b03bf;
   box-shadow: 0 0 0 4px rgba(164, 1, 161, 0.4);
 }
 
-#todo-elements {
+#todo-elements,
+#categories-elements {
   list-style-type: none;
   display: flex;
   flex-direction: column;
@@ -143,7 +205,23 @@ body {
   width: 100%;
 }
 
-#todo-elements li {
+.category-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  height: 54px;
+  margin-bottom: 10px;
+  padding: 12px 16px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(191, 33, 243, 0.4);
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+}
+
+#todo-elements li,
+.categoryPill {
   display: grid;
   grid-template-columns: auto auto 1fr auto;
   align-items: center;
@@ -157,7 +235,8 @@ body {
   transition: background-color 0.2s ease;
 }
 
-#todo-elements li:hover {
+#todo-elements li:hover,
+.categoryPill:hover {
   background-color: rgba(255, 255, 255, 0.1);
 }
 
@@ -165,6 +244,33 @@ body {
   text-align: left;
   overflow-wrap: anywhere;
   font-size: 15px;
+}
+
+.category-item .categoryPill {
+  flex: 1;
+  width: auto;
+  margin: 0;
+  padding: 0.5rem 0.8rem;
+  border-radius: 9px;
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.category-action-button {
+  border: none;
+  border-radius: 6px;
+  padding: 0.45rem 0.75rem;
+  background: rgba(191, 33, 243, 0.16);
+  color: #fff;
+  cursor: pointer;
+}
+
+.category-action-button.danger {
+  background: rgba(239, 68, 68, 0.18);
 }
 
 /* Style for Checkbox, Optionnal but added so it adapt the global style */
@@ -294,6 +400,48 @@ input[type="checkbox"]:checked::before {
   color: #ffffff;
 }
 
+#category-color-input {
+  -webkit-appearance: none; /* Hide native style of Chrome/Safari */
+  -moz-appearance: none;    /* Hide native style of Firefox */
+  appearance: none;
+  
+  width: 45px;
+  height: 45px;
+  border: 2px solid #e2e8f0;
+  border-radius: 20%;
+  background: transparent;
+  cursor: pointer;
+  overflow: hidden;
+  padding: 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+#category-color-input:hover {
+  border-color: #cbd5e1;
+}
+
+#category-color-input:focus {
+  outline: none;
+  border-color: #ab32da;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+}
+
+#category-color-input::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+#category-color-input::-webkit-color-swatch {
+  border: none;
+  border-radius: 15%;
+}
+
+/*(Firefox) */
+#category-color-input::-moz-color-swatch {
+  border: none;
+  border-radius: 15%;
+}
+
+
 /* Optionnal but make the UX better :} Lancer was here */
 @keyframes fadeIn {
   from {
@@ -318,5 +466,31 @@ input[type="checkbox"]:checked::before {
   40%,
   80% {
     transform: translateX(4px);
+  }
+}
+
+@media (max-width: 640px) {
+  body {
+    padding: 20px 12px;
+  }
+
+  #todoContainer {
+    padding: 22px 16px;
+  }
+
+  #todo-fill,
+  #category-fill {
+    display: grid;
+    grid-template-columns: 1fr auto;
+  }
+
+  #todo-date-input,
+  #add-todo-button,
+  #add-category-button {
+    width: 100%;
+  }
+
+  #category-btn {
+    min-height: 46px;
   }
 }

@@ -3,17 +3,25 @@ import { createTodoElement } from './components/todoItem'
 import {
   createTodoInApi,
   deleteAllTodosInApi,
+  deleteCategoryInApi,
   deleteTodoInApi,
+  getCategoriesFromApi,
   getTodosFromApi,
+  createCategoryInApi,
+  updateCategoryInApi,
   updateTodoInApi,
 } from './servcies/storage'
 import { setupTodoPlaceholderAnimation } from './styles/styles'
 import type { Todo } from './types/todo'
+import type { Category } from './types/todo'
 import { checkHasOverdueTasks, getTodayString } from './utils/date'
 
 console.log('Hello from typescript')
 
 let todos: Todo[] = []
+let categories: Category[] = []
+let editingCategoryId: number | null = null
+
 // Get references to the HTML elements
 const todoDateInput = document.getElementById(
   'todo-date-input',
@@ -28,12 +36,28 @@ const todoListContainer = document.getElementById(
 const errorMessage = document.getElementById(
   'error-message',
 ) as HTMLParagraphElement
+const errorCategory = document.getElementById(
+  'error-category',
+) as HTMLParagraphElement
 const overdueMessage = document.getElementById(
   'overdue-message',
 ) as HTMLParagraphElement
 const deleteAllButton = document.getElementById(
   'delete-all',
 ) as HTMLButtonElement
+
+const categoryInput = document.getElementById(
+  'category-name-input',
+) as HTMLInputElement
+const categoryColor = document.getElementById(
+  'category-color-input',
+) as HTMLInputElement
+const addCategoryButton = document.getElementById(
+  'add-category-button',
+) as HTMLButtonElement
+const categoriesContainer = document.getElementById(
+  'categories-elements',
+) as HTMLDivElement
 
 setupTodoPlaceholderAnimation(todoInput)
 
@@ -83,11 +107,78 @@ const renderTodos = () => {
   updateOverdueMessage()
 }
 
+const resetCategoryForm = () => {
+  categoryInput.value = ''
+  categoryColor.value = '#22c55e'
+  editingCategoryId = null
+  addCategoryButton.textContent = 'Add Category'
+}
+
+const renderCategories = () => {
+  categoriesContainer.innerHTML = ''
+
+  categories.forEach((category) => {
+    const categoryItem = document.createElement('div')
+    categoryItem.className = 'category-item'
+
+    const categoryPill = document.createElement('span')
+    categoryPill.className = 'categoryPill'
+    categoryPill.textContent = category.title ?? 'Untitled category'
+    categoryPill.style.backgroundColor = category.color ?? '#22c55e'
+    categoryPill.style.color = '#ffffff'
+
+    const editButton = document.createElement('button')
+    editButton.type = 'button'
+    editButton.textContent = 'Edit'
+    editButton.className = 'category-action-button'
+    editButton.addEventListener('click', () => {
+      categoryInput.value = category.title ?? ''
+      categoryColor.value = category.color ?? '#22c55e'
+      editingCategoryId = category.id ?? null
+      addCategoryButton.textContent = 'Save Category'
+    })
+
+    const deleteButton = document.createElement('button')
+    deleteButton.type = 'button'
+    deleteButton.textContent = '✕'
+    deleteButton.className = 'delete-btn'
+    deleteButton.addEventListener('click', async () => {
+      if (category.id == null) return
+
+      showLoading()
+      try {
+        await deleteCategoryInApi(category.id)
+        categories = categories.filter((item) => item.id !== category.id)
+        renderCategories()
+
+        if (editingCategoryId === category.id) {
+          resetCategoryForm()
+        }
+      } finally {
+        hideLoading()
+      }
+    })
+
+    categoryItem.append(categoryPill, editButton, deleteButton)
+    categoriesContainer.appendChild(categoryItem)
+  })
+}
+
 const loadTodos = async () => {
   showLoading()
   try {
     todos = await getTodosFromApi()
     renderTodos()
+  } finally {
+    hideLoading()
+  }
+}
+
+const loadCategories = async () => {
+  showLoading()
+  try {
+    categories = await getCategoriesFromApi()
+    renderCategories()
   } finally {
     hideLoading()
   }
@@ -131,6 +222,51 @@ addTodoButton.addEventListener('click', async () => {
   }
 })
 
+addCategoryButton.addEventListener('click', async () => {
+  const categoryText = categoryInput.value.trim()
+  const categoryChoiceColor = categoryColor.value
+
+  if (!categoryText) {
+    errorCategory.textContent = 'Please enter a category name.'
+    errorCategory.classList.add('show', 'shake')
+    return
+  }
+
+  showLoading()
+
+  try {
+    if (editingCategoryId !== null) {
+      const updatedCategory = await updateCategoryInApi(editingCategoryId, {
+        title: categoryText,
+        color: categoryChoiceColor,
+      })
+
+      categories = categories.map((category) =>
+        category.id === editingCategoryId ? updatedCategory : category,
+      )
+      errorCategory.textContent = ''
+      errorCategory.classList.remove('show')
+    } else {
+      const newCategory = await createCategoryInApi({
+        title: categoryText,
+        color: categoryChoiceColor,
+      })
+      categories.push(newCategory)
+      errorCategory.textContent = ''
+      errorCategory.classList.remove('show')
+    }
+
+    renderCategories()
+    resetCategoryForm()
+  } catch (error) {
+    console.error('Failed to save category:', error)
+    errorCategory.textContent = 'Unable to save the category. Please try again.'
+    errorCategory.classList.add('show', 'shake')
+  } finally {
+    hideLoading()
+  }
+})
+
 deleteAllButton.addEventListener('click', () => {
   void deleteAllTodosInApi().then(() => {
     todos = []
@@ -139,3 +275,4 @@ deleteAllButton.addEventListener('click', () => {
 })
 
 void loadTodos()
+void loadCategories()

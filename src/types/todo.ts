@@ -5,3 +5,9 @@ export interface Todo {
   due_date?: string | null
   done: boolean
 }
+
+export interface Category {
+  id?: number
+  title?: string
+  color?: string
+}

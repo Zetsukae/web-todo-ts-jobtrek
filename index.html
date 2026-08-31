@@ -7,25 +7,47 @@
     <title>Web todolist project</title>
   </head>
   <body>
-    <div id="todoContainer">
-      <h1 id="web-title">Web todolist app</h1>
-        <p id="overdue-message" class="shake"></p>
-        <p id="error-message" class="shake"></p>
-        <div id="todo-fill">
-          <input id="todo-input" type="text" placeholder="" />
-          <input type="date" id="todo-date-input" />
-          <button type="button" id="add-todo-button">Add To-do</button>
+    <h1>Web todolist app</h1>
+    <div class="contentWrapper">
+      <!-- Here's the Main -->
+      <div id="todoContainer">
+        <h1 id="web-title">Todos</h1>
+          <p id="overdue-message" class="shake"></p>
+          <p id="error-message" class="shake"></p>
+          <div id="todo-fill">
+            <input id="todo-input" type="text" placeholder="" />
+            <input type="date" id="todo-date-input" />
+            <button
+              type="button"
+              id="category-btn"
+              aria-label="Choose a category"
+              title="Choose a category">
+              <img src="/category.svg" class="category-icon" alt="" />
+            </button>
+            <button type="button" id="add-todo-button">Add To-do</button>
+          </div>
+        <div id="todo-list">
+          <ul id="todo-elements"></ul>
         </div>
-      <div id="todo-list">
-        <ul id="todo-elements"></ul>
+        <span id="loading-spinner" class="loading-spinner hidden"></span>
+        <button type="button" id="delete-all">Delete All</button>
       </div>
-      <span id="loading-spinner" class="loading-spinner hidden"></span>
-      <button type="button" id="delete-all">Delete All</button>
+      <!-- Here's the Category -->
+      <div id="categoryContainer">
+        <h1 id="web-title">Categories</h1>
+        <p id="error-category" class="shake"></p>
+        <div id="category-fill">
+          <input id="category-name-input" type="text" placeholder="Enter the name of the category" />
+          <input type="color" id="category-color-input" value="#22c55e">
+          <button type="button" id="add-category-button">Add Category</button>
+        </div>
+        <div id="categories-elements">
+        </div>
+      </div>
     </div>
   </body>
   <footer id="deamur">
-    <p>7etsukae</p>
-    <p>| You should try </p>
+    <p>7etsukae | You should try </p>
     <a href="https://underfang.com">Underfang</a>
   </footer>
   <script type="module" src="/src/main.ts"></script>
