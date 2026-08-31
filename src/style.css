@@ -1,9 +1,220 @@
 html,
 body {
-  padding: 0;
+  display: flex;
+  justify-content: center;
+  padding: 150px;
   margin: 0;
+  background-color: rgb(57, 0, 121);
+}
+
+p {
+  display: inline-block;
+  white-space: nowrap;
+  border-radius: 5px;
+  background-color: #f8f6f6d0;
+  color: black;
+  font-size: 12px;
+  height: 20px;
+  line-height: 20px;
+  vertical-align: middle;
+  padding: 0 5px;
+}
+
+/* Damur was found here */
+#todo-elements li input[type="checkbox"]:checked + span {
+  text-decoration: line-through;
+  color: #b3b3b3;
+  transition: 0.3s ease-in;
+}
+
+#todoContainer {
+  background-color: rgb(124, 0, 195);
+  border-radius: 10px;
+  color: white;
+  padding: 20px;
+  width: 800px;
+  margin: 0 auto;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+#add-todo-button {
+  background-color: rgb(71, 2, 151);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#add-todo-button:hover {
+  box-shadow: 0 0 0 4px rgb(164, 1, 161);
+}
+
+#todo-input {
+  padding: 10px;
+  border-radius: 5px;
+  border: none;
+  width: calc(100% - 290px);
+  margin-right: 10px;
+  border-color: #bf21f3;
+  outline: none;
+}
+
+#todo-input:focus {
+  background-color: #ffffff;
+  box-shadow: 0 0 0 4px rgb(204, 0, 201);
+}
+
+#todo-date-input {
+  padding: 10px;
+  border-radius: 5px;
+  border: none;
+  border-color: #bf21f3;
+  outline: none;
+  margin-right: 10px;
+}
+
+#todo-date-input:focus {
+  background-color: #ffffff;
+  box-shadow: 0 0 0 4px rgb(204, 0, 201);
+}
+
+#todo-elements {
+  list-style-type: none;
+  padding: 0;
+  overflow-wrap: break-word;
+  max-width: 100%;
+  white-space: normal;
+}
+
+/* Style for Checkbox, Optionnal but added so it adapt the global style */
+input[type="checkbox"] {
+  -webkit-appearance: none;
+  appearance: none;
+
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  background-color: #fff;
+  cursor: pointer;
+  display: inline-grid;
+  place-content: center;
+  vertical-align: middle;
+}
+
+input[type="checkbox"]:checked {
+  background-color: #bf21f3;
+  border-color: #8c0bac;
+  transition: 0.1s ease-in;
+}
+
+input[type="checkbox"]::before {
+  content: "";
+  width: 10px;
+  height: 5px;
+  border-left: 2px solid white;
+  border-bottom: 2px solid white;
+  transform: rotate(-45deg) translate(1px, -1px);
+
+  transform-origin: center;
+  scale: 0;
+}
+
+input[type="checkbox"]:checked::before {
+  scale: 1;
 }
 
 * {
   font-family: Helvetica, Arial, sans-serif;
+}
+
+.delete-btn {
+  margin-right: 4px;
+  background-color: #ffffff;
+  color: rgb(0, 0, 0);
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  display: inline-grid;
+  place-content: center;
+  vertical-align: middle;
+}
+
+.delete-btn:hover {
+  background-color: rgb(248, 0, 111);
+  color: white;
+  height: 20px;
+  width: 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#delete-all {
+  background-color: #ffffff;
+  color: rgb(0, 0, 0);
+  height: 25px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  display: inline-grid;
+  place-content: center;
+  vertical-align: middle;
+  padding: 10px 20px;
+  margin: 5% 0 0 44%;
+}
+
+#delete-all:hover {
+  background-color: #ff0090;
+  color: rgb(255, 255, 255);
+  height: 25px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  display: inline-grid;
+  place-content: center;
+  vertical-align: middle;
+  padding: 10px 20px;
+}
+
+/* Optionnal but make the UX better :} Lancer was here */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+#error-message {
+  display: none;
+}
+
+#error-message.show {
+  display: block;
+  animation: fadeIn 0.3s ease-in forwards;
+}
+
+#error-message.shake {
+  animation: shake 0.2s ease-in-out;
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20%,
+  60% {
+    transform: translateX(-4px);
+  }
+  40%,
+  80% {
+    transform: translateX(4px);
+  }
 }
