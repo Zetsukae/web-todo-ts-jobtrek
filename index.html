@@ -8,6 +8,50 @@
   </head>
   <body>
     <h1>Web todolist app</h1>
-    <script type="module" src="/src/main.ts"></script>
+    <div class="contentWrapper">
+      <!-- Here's the Main -->
+      <div id="todoContainer">
+        <h1 id="web-title">Todos</h1>
+          <p id="error-message" class="shake"></p>
+          <div id="todo-fill">
+            <input id="todo-input" type="text" placeholder="Enter the name of the to-do." />
+            <input type="date" id="todo-date-input" />
+            <select id="todo-category-select" class="custom-select" aria-label="Select a category">
+              <optgroup label="Categories">
+                <!-- Here will appear options dynamically depends of created categories -->
+              </optgroup>
+            </select>
+            <button type="button" id="add-todo-button">Add To-do</button>
+          </div>
+          <div id="loading-pos">
+          <span id="loading-spinner" class="loading-spinner hidden"></span>
+        </div>
+        <div id="todo-list">
+          <ul id="todo-elements"></ul>
+        </div>
+        <button type="button" id="delete-all">Delete All</button>
+      </div>
+      <!-- Here's the Category -->
+      <div id="categoryContainer">
+        <h1 id="web-title">Categories</h1>
+        <p id="error-category" class="shake"></p>
+        <div id="category-fill">
+          <input id="category-name-input" type="text" maxlength="36" placeholder="Enter the name of the category" />
+          <input type="color" id="category-color-input" value="#d042ff">
+          <button type="button" id="add-category-button">Add Category</button>
+        </div>
+        <div id="loading-pos">
+          <span id="loading-spinner" class="loading-spinner hidden"></span>
+        </div>
+        <div id="categories-elements">
+        </div>
+      </div>
+    </div>
   </body>
+  <footer id="deamur">
+    <p>© 7etsukae | You should try </p>
+    <a href="https://underfang.com">Underfang</a>
+  </footer>
+  <script type="module" src="/src/main.ts"></script>
 </html>
+<!-- Leax was here. -->
