@@ -1,6 +1,12 @@
 import './styles/style.css'
+import {
+  createCategoryElement,
+  populateCategoryFormForEdit,
+  resetCategoryForm,
+} from './components/categoryItem'
 import { createTodoElement } from './components/todoItem'
 import {
+  assignCategoryToTodo,
   createCategoryInApi,
   createTodoInApi,
   deleteAllTodosInApi,
@@ -11,7 +17,7 @@ import {
   updateCategoryInApi,
   updateTodoInApi,
 } from './servcies/storage'
-import { setupTodoPlaceholderAnimation } from './styles/styles'
+
 import type { Category, Todo } from './types/todo'
 import { checkHasOverdueTasks, getTodayString } from './utils/date'
 
@@ -38,9 +44,6 @@ const errorMessage = document.getElementById(
 const errorCategory = document.getElementById(
   'error-category',
 ) as HTMLParagraphElement
-const overdueMessage = document.getElementById(
-  'overdue-message',
-) as HTMLParagraphElement
 const deleteAllButton = document.getElementById(
   'delete-all',
 ) as HTMLButtonElement
@@ -57,23 +60,77 @@ const addCategoryButton = document.getElementById(
 const categoriesContainer = document.getElementById(
   'categories-elements',
 ) as HTMLDivElement
+const todoCategorySelect = document.getElementById(
+  'todo-category-select',
+) as HTMLSelectElement
 
-setupTodoPlaceholderAnimation(todoInput)
-
-const updateOverdueMessage = () => {
-  overdueMessage.textContent = checkHasOverdueTasks(todos)
-    ? 'Please do the overdue task(s)! Use your time wisely. . .'
-    : ''
+const categoryFormElements = {
+  input: categoryInput,
+  colorInput: categoryColor,
+  submitButton: addCategoryButton,
 }
 
-const loadingSpinner = document.getElementById('loading-spinner') as HTMLElement
+const renderTodoCategoryOptions = () => {
+  const categoryGroup = todoCategorySelect.querySelector('optgroup')
+
+  if (!categoryGroup) return
+
+  categoryGroup.innerHTML = ''
+
+  if (categories.length === 0) {
+    const emptyOption = document.createElement('option')
+    emptyOption.textContent = 'No categories available'
+    emptyOption.value = ''
+    emptyOption.disabled = true
+    emptyOption.selected = true
+    categoryGroup.appendChild(emptyOption)
+    return
+  }
+
+  const noneOption = document.createElement('option')
+  noneOption.textContent = 'Choose none'
+  noneOption.value = ''
+  categoryGroup.appendChild(noneOption)
+
+  const separator = document.createElement('hr')
+  categoryGroup.appendChild(separator)
+
+  categories.forEach((category) => {
+    const option = document.createElement('option')
+    option.value = String(category.id ?? '')
+    option.textContent = category.title ?? 'Untitled category'
+    categoryGroup.appendChild(option)
+  })
+
+  todoCategorySelect.value = ''
+}
+
+const updateOverdueMessage = () => {
+  const hasOverdue = checkHasOverdueTasks(todos)
+
+  if (hasOverdue) {
+    errorMessage.textContent =
+      'Please do the overdue task(s)! Use your time wisely. . .'
+    errorMessage.classList.add('show', 'shake')
+  } else {
+    errorMessage.textContent = ''
+    errorMessage.classList.remove('show', 'shake')
+  }
+}
+
+const loadingSpinners =
+  document.querySelectorAll<HTMLElement>('.loading-spinner')
 
 const showLoading = () => {
-  if (loadingSpinner) loadingSpinner.style.display = 'block'
+  loadingSpinners.forEach((spinner) => {
+    spinner.style.display = 'block'
+  })
 }
 
 const hideLoading = () => {
-  if (loadingSpinner) loadingSpinner.style.display = 'none'
+  loadingSpinners.forEach((spinner) => {
+    spinner.style.display = 'none'
+  })
 }
 
 const renderTodos = () => {
@@ -82,21 +139,28 @@ const renderTodos = () => {
   todos.forEach((todo) => {
     const todoElement = createTodoElement(
       todo,
+      categories,
       async (idToDelete) => {
         showLoading()
-        await deleteTodoInApi(idToDelete)
-        todos = todos.filter((todoItem) => todoItem.id !== idToDelete)
-        renderTodos()
-        hideLoading()
+        try {
+          await deleteTodoInApi(idToDelete)
+          todos = todos.filter((todoItem) => todoItem.id !== idToDelete)
+          renderTodos()
+        } finally {
+          hideLoading()
+        }
       },
       async (idToToggle, done) => {
         const target = todos.find((t) => t.id === idToToggle)
         if (target) {
           showLoading()
-          await updateTodoInApi(idToToggle, { done })
-          target.done = done
-          renderTodos()
-          hideLoading()
+          try {
+            await updateTodoInApi(idToToggle, { done })
+            target.done = done
+            renderTodos()
+          } finally {
+            hideLoading()
+          }
         }
       },
     )
@@ -106,85 +170,58 @@ const renderTodos = () => {
   updateOverdueMessage()
 }
 
-const resetCategoryForm = () => {
-  categoryInput.value = ''
-  categoryColor.value = '#22c55e'
-  editingCategoryId = null
-  addCategoryButton.textContent = 'Add Category'
-}
-
 const renderCategories = () => {
   categoriesContainer.innerHTML = ''
 
   categories.forEach((category) => {
-    const categoryItem = document.createElement('div')
-    categoryItem.className = 'category-item'
+    const categoryElement = createCategoryElement(category, {
+      onEdit: (catToEdit) => {
+        editingCategoryId = populateCategoryFormForEdit(
+          catToEdit,
+          categoryFormElements,
+        )
+      },
+      onDelete: async (idToDelete) => {
+        showLoading()
+        try {
+          await deleteCategoryInApi(idToDelete)
+          categories = categories.filter((item) => item.id !== idToDelete)
+          renderCategories()
+          renderTodos()
 
-    const categoryPill = document.createElement('span')
-    categoryPill.className = 'categoryPill'
-    categoryPill.textContent = category.title ?? 'Untitled category'
-    categoryPill.style.backgroundColor = category.color ?? '#22c55e'
-    categoryPill.style.color = '#ffffff'
-
-    const editButton = document.createElement('button')
-    editButton.type = 'button'
-    editButton.textContent = 'Edit'
-    editButton.className = 'category-action-button'
-    editButton.addEventListener('click', () => {
-      categoryInput.value = category.title ?? ''
-      categoryColor.value = category.color ?? '#22c55e'
-      editingCategoryId = category.id ?? null
-      addCategoryButton.textContent = 'Save Category'
-    })
-
-    const deleteButton = document.createElement('button')
-    deleteButton.type = 'button'
-    deleteButton.textContent = '✕'
-    deleteButton.className = 'delete-btn'
-    deleteButton.addEventListener('click', async () => {
-      if (category.id == null) return
-
-      showLoading()
-      try {
-        await deleteCategoryInApi(category.id)
-        categories = categories.filter((item) => item.id !== category.id)
-        renderCategories()
-
-        if (editingCategoryId === category.id) {
-          resetCategoryForm()
+          if (editingCategoryId === idToDelete) {
+            editingCategoryId = resetCategoryForm(categoryFormElements)
+          }
+        } finally {
+          hideLoading()
         }
-      } finally {
-        hideLoading()
-      }
+      },
     })
 
-    categoryItem.append(categoryPill, editButton, deleteButton)
-    categoriesContainer.appendChild(categoryItem)
+    categoriesContainer.appendChild(categoryElement)
   })
+
+  renderTodoCategoryOptions()
 }
 
-const loadTodos = async () => {
+const loadData = async () => {
   showLoading()
   try {
-    todos = await getTodosFromApi()
+    const [loadedTodos, loadedCategories] = await Promise.all([
+      getTodosFromApi(),
+      getCategoriesFromApi(),
+    ])
+
+    todos = loadedTodos
+    categories = loadedCategories
+    renderCategories()
     renderTodos()
   } finally {
     hideLoading()
   }
 }
 
-const loadCategories = async () => {
-  showLoading()
-  try {
-    categories = await getCategoriesFromApi()
-    renderCategories()
-  } finally {
-    hideLoading()
-  }
-}
-
-// Add events
-addTodoButton.addEventListener('click', async () => {
+const addTodoAction = async () => {
   const todoText = todoInput.value.trim()
   const todoDate = todoDateInput.value.trim()
   const today = getTodayString()
@@ -198,26 +235,52 @@ addTodoButton.addEventListener('click', async () => {
     }
 
     const finalDate = todoDate !== '' ? todoDate : null
+    const selectedCategoryId =
+      todoCategorySelect.value === '' ? null : Number(todoCategorySelect.value)
+    const todoContent =
+      selectedCategoryId !== null
+        ? JSON.stringify({ category_id: selectedCategoryId })
+        : null
 
-    const newTodoFromApi = await createTodoInApi({
-      title: todoText,
-      due_date: finalDate,
-      done: false,
-    })
+    showLoading()
+    try {
+      const newTodoFromApi = await createTodoInApi({
+        title: todoText,
+        content: todoContent,
+        due_date: finalDate,
+        done: false,
+      })
 
-    todos.push(newTodoFromApi)
-    renderTodos()
+      if (selectedCategoryId !== null) {
+        await assignCategoryToTodo(newTodoFromApi.id, selectedCategoryId)
+      }
 
-    todoInput.value = ''
-    todoDateInput.value = ''
-    errorMessage.textContent = ''
-    errorMessage.classList.remove('show')
+      todos.push(newTodoFromApi)
+      renderTodos()
 
-    renderTodos()
+      todoInput.value = ''
+      todoDateInput.value = ''
+      todoCategorySelect.value = ''
+      errorMessage.textContent = ''
+      errorMessage.classList.remove('show')
+    } finally {
+      hideLoading()
+    }
   } else {
     errorMessage.textContent =
       "Please enter both a to-do and a date. You can't do nothing about your life. . ."
     errorMessage.classList.add('show', 'shake')
+  }
+}
+
+// Add Events
+addTodoButton.addEventListener('click', () => {
+  addTodoAction()
+})
+
+todoInput.addEventListener('keydown', (event: KeyboardEvent) => {
+  if (event.key === 'Enter') {
+    addTodoAction()
   }
 })
 
@@ -256,7 +319,8 @@ addCategoryButton.addEventListener('click', async () => {
     }
 
     renderCategories()
-    resetCategoryForm()
+    renderTodos()
+    editingCategoryId = resetCategoryForm(categoryFormElements)
   } catch (error) {
     console.error('Failed to save category:', error)
     errorCategory.textContent = 'Unable to save the category. Please try again.'
@@ -266,12 +330,15 @@ addCategoryButton.addEventListener('click', async () => {
   }
 })
 
-deleteAllButton.addEventListener('click', () => {
-  void deleteAllTodosInApi().then(() => {
+deleteAllButton.addEventListener('click', async () => {
+  showLoading()
+  try {
+    await deleteAllTodosInApi()
     todos = []
     renderTodos()
-  })
+  } finally {
+    hideLoading()
+  }
 })
 
-void loadTodos()
-void loadCategories()
+void loadData()

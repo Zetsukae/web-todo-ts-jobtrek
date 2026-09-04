@@ -6,13 +6,27 @@
   padding: 0;
 }
 
+.custom-select,
+.custom-select::picker(select) {
+  appearance: base-select;
+}
+
+.custom-select {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 8px;
+  background-color: #ffffff;
+  cursor: pointer;
+  height: 46px;
+}
+
 .contentWrapper {
   margin-top: 2%;
   display: flex;
-  flex-direction: row;
+  justify-content: center;
   gap: 24px;
   width: 100%;
-  max-width: 1200px;
+  max-width: 2000px;
 }
 
 input[type="text"] {
@@ -54,9 +68,14 @@ body {
   border-right: calc(3 * var(--size)) solid transparent;
   box-sizing: border-box;
 
-  translate: 513% 0;
+  margin-bottom: 20px;
 
   animation: rotation 1s linear infinite;
+}
+
+#loading-pos {
+  display: flex;
+  justify-content: center;
 }
 
 @keyframes rotation {
@@ -88,7 +107,6 @@ body {
     0 8px 10px -6px rgba(0, 0, 0, 0.3);
 }
 
-.overdue-message,
 #error-message,
 #error-category {
   display: none;
@@ -102,14 +120,12 @@ body {
   margin: 20px 0 10px 0;
 }
 
-.overdue-message.show,
 #error-message.show,
 #error-category.show {
   display: block;
   animation: fadeIn 0.3s ease-in forwards;
 }
 
-.overdue-message.shake,
 #error-message.shake,
 #error-category.shake {
   animation: shake 0.2s ease-in-out;
@@ -143,6 +159,7 @@ body {
   border: 2px solid transparent;
   outline: none;
   font-size: 14px;
+  width: 50px;
 }
 
 #category-btn {
@@ -198,6 +215,10 @@ input[type="text"]:focus-visible {
   box-shadow: 0 0 0 4px rgba(164, 1, 161, 0.4);
 }
 
+.custom-select:hover {
+  box-shadow: 0 0 0 4px rgba(164, 1, 161, 0.4);
+}
+
 #todo-elements,
 #categories-elements {
   list-style-type: none;
@@ -235,6 +256,14 @@ input[type="text"]:focus-visible {
   border: 1px solid rgba(191, 33, 243, 0.4);
   border-radius: 8px;
   transition: background-color 0.2s ease;
+  cursor: grab;
+}
+
+#todo-elements li .todo-content {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
 }
 
 #todo-elements li:hover,
@@ -246,6 +275,8 @@ input[type="text"]:focus-visible {
   text-align: left;
   overflow-wrap: anywhere;
   font-size: 15px;
+  position: relative;
+  top: 50%;
 }
 
 .category-item .categoryPill {
@@ -287,6 +318,8 @@ input[type="checkbox"] {
   cursor: pointer;
   display: inline-grid;
   place-content: center;
+  position: relative;
+  top: 50%;
 }
 
 input[type="checkbox"]:checked {
@@ -314,7 +347,8 @@ input[type="checkbox"]:checked::before {
   color: rgba(255, 255, 255, 0.5);
 }
 
-[class^="date-"] {
+[class^="date-"],
+.todo-category-badge {
   background-color: rgba(255, 255, 255, 0.85);
   color: #1a1a1a;
   border-radius: 6px;
@@ -322,6 +356,10 @@ input[type="checkbox"]:checked::before {
   font-size: 12px;
   font-weight: 600;
   white-space: nowrap;
+  cursor: default;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .date-overdue {
@@ -340,7 +378,8 @@ input[type="checkbox"]:checked::before {
   background-color: #22c55e;
   color: #ffffff;
 }
-.date-no-due {
+.date-no-due,
+.todo-category-badge {
   background-color: rgba(255, 255, 255, 0.2);
   color: #ffffff;
 }
@@ -356,9 +395,25 @@ input[type="checkbox"]:checked::before {
   display: inline-grid;
   place-content: center;
   font-weight: bold;
+  position: relative;
+  top: 50%;
 }
 
-.delete-btn:hover {
+.delete-btnCat {
+  background-color: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  display: inline-grid;
+  place-content: center;
+  font-weight: bold;
+}
+
+.delete-btn:hover,
+.delete-btnCat:hover {
   background-color: #f43f5e;
   color: #ffffff;
 }

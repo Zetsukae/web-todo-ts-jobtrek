@@ -2,27 +2,31 @@ import type { Category, Todo } from '../types/todo'
 
 const API_URL = 'https://api.todos.in.jt-lab.ch/todos'
 const CATEGORIES_API_URL = 'https://api.todos.in.jt-lab.ch/categories'
+const CATEGORIES_TODOS_URL = 'https://api.todos.in.jt-lab.ch/categories_todos'
 
 export type CreateTodoInput = Omit<Todo, 'id'>
 export type CreateCategoryInput = Omit<Category, 'id'>
 
 // 1. GET - Receive data
 export const getTodosFromApi = async (): Promise<Todo[]> => {
-  try {
-    const response = await fetch(API_URL)
-
-    if (!response.ok) {
-      throw new Error(`HTTP Error: ${response.status}`)
-    }
-
-    const data: Todo[] = await response.json()
-    return data
-  } catch (error) {
-    console.error('Error while trying to receive data:', error)
-    throw error
-  }
+  const url = `${API_URL}?select=*,categories_todos(category_id,categories(*))`
+  const response = await fetch(url)
+  if (!response.ok) throw new Error(`HTTP Error: ${response.status}`)
+  return await response.json()
 }
 
+// Assign category to todo via junction table
+export const assignCategoryToTodo = async (
+  todoId: number,
+  categoryId: number,
+): Promise<void> => {
+  const response = await fetch(CATEGORIES_TODOS_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ todo_id: todoId, category_id: categoryId }),
+  })
+  if (!response.ok) throw new Error(`HTTP Error: ${response.status}`)
+}
 export const getCategoriesFromApi = async (): Promise<Category[]> => {
   try {
     const response = await fetch(CATEGORIES_API_URL)
