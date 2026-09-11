@@ -116,4 +116,4 @@ deleteAllButton.addEventListener('click', () => {
 })
 
 // Initial Load
-renderTodos)
+renderTodos()
