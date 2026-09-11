@@ -1,162 +1,211 @@
-html,
+* {
+  box-sizing: border-box;
+  font-family:
+    system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
 body {
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  padding: 40px 20px;
+  background-color: #390079;
+  color: #ffffff;
+}
+
+#web-title,
+#category-title {
+  text-align: center;
+}
+
+.contentWrapper {
+  margin-top: 2%;
+  display: flex;
   justify-content: center;
-  padding: 150px;
-  margin: 0;
-  background-color: rgb(57, 0, 121);
+  gap: 24px;
+  width: 100%;
+  max-width: 2000px;
 }
 
-[class^="date-"] {
-  background-color: rgba(255, 255, 255, 0.704);
-  border-radius: 6px;
-  padding: 2px 6px;
-  display: inline-block;
-  font-size: 14px;
+#todoContainer,
+#categoryContainer {
+  flex: 1 1 0;
+  min-width: 0;
+  background-color: #7c00c3;
+  border-radius: 16px;
+  padding: 32px;
+  width: 100%;
+  max-width: 800px;
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.3),
+    0 8px 10px -6px rgba(0, 0, 0, 0.3);
+}
+
+.overdue-message,
+#error-message,
+#error-category {
+  display: none;
+  background-color: rgba(239, 68, 68, 0.9);
+  color: #ffffff;
+  border-radius: 8px;
+  padding: 12px 16px;
+  text-align: center;
   font-weight: 600;
+  font-size: 14px;
+  margin: 20px 0 10px 0;
 }
 
-.date-overdue {
-  background-color: red;
+.overdue-message.show,
+#error-message.show,
+#error-category.show {
+  display: block;
+  animation: fadeIn 0.3s ease-in forwards;
 }
 
-.date-today {
-  background-color: orange;
+.overdue-message.shake,
+#error-message.shake,
+#error-category.shake {
+  animation: shake 0.2s ease-in-out;
 }
 
-.date-this-week {
-  background-color: rgb(196, 196, 0);
-}
-
-.date-future {
-  background-color: rgb(2, 204, 2);
-}
-
-.date-no-due {
-  display: inline-block;
-  font-size: 12px;
-  background-color: rgba(255, 255, 255, 0.704);
-  color: #3a2a4d;
-}
-
-#todoContainer {
-  background-color: rgb(124, 0, 195);
-  border-radius: 10px;
-  color: white;
-  padding: 20px;
-  width: 1000px;
-  margin: 0 auto;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+#todo-fill,
+#category-fill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 24px 0 15px;
 }
 
 #todo-list {
   display: flex;
-  align-items: center;
-  padding: 10px;
-  width: 100%;
-  box-sizing: border-box;
+  flex-direction: column;
+  margin-bottom: 24px;
 }
 
-#add-todo-button {
-  background-color: rgb(71, 2, 151);
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
+input[type="text"] {
+  flex: 1;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  outline: none;
+  font-size: 15px;
 }
 
-#add-todo-button:hover {
-  box-shadow: 0 0 0 4px rgb(164, 1, 161);
+#todo-input,
+#todo-date-input,
+#add-todo-button,
+#add-category-button {
+  height: 46px;
 }
 
 #todo-input {
-  padding: 10px;
-  border-radius: 5px;
-  border: none;
-  width: calc(100% - 290px);
-  margin-right: 10px;
-  border-color: #bf21f3;
-  outline: none;
-}
-
-#todo-input:focus {
-  background-color: #ffffff;
-  box-shadow: 0 0 0 4px rgb(204, 0, 201);
+  min-width: 0;
 }
 
 #todo-date-input {
-  padding: 10px;
-  border-radius: 5px;
-  border: none;
-  border-color: #bf21f3;
+  padding: 12px;
+  border-radius: 8px;
+  border: 2px solid transparent;
   outline: none;
-  margin-right: 10px;
+  font-size: 14px;
 }
 
+input[type="text"]:focus,
 #todo-date-input:focus {
   background-color: #ffffff;
-  box-shadow: 0 0 0 4px rgb(204, 0, 201);
+  border-color: #bf21f3;
+  box-shadow: 0 0 0 4px rgba(191, 33, 243, 0.3);
 }
 
-#todo-elements {
+#add-todo-button,
+#add-category-button,
+#add-folder-button {
+  background-color: #470297;
+  color: #ffffff;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+#add-todo-button:hover,
+#add-category-button:hover,
+#add-folder-button:hover {
+  background-color: #5b03bf;
+  box-shadow: 0 0 0 4px rgba(164, 1, 161, 0.4);
+}
+
+#todo-elements,
+#categories-elements,
+#todo-folders,
+.folder-todos {
   list-style-type: none;
-  padding: 0;
-  overflow-wrap: break-word;
-  max-width: 100%;
-  white-space: normal;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
 }
 
-#todo-elements li {
+.folder-todos li,
+#todo-elements li,
+#todo-folders li,
+.categoryPill {
   display: grid;
-  grid-template-columns: auto auto 1fr auto;
+  grid-template-columns: auto auto 1fr auto auto;
   align-items: center;
   width: 100%;
   gap: 10px;
   margin-bottom: 10px;
+  padding: 12px 16px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(191, 33, 243, 0.4);
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
 }
 
+.folder-todos li:hover,
+#todo-elements li:hover,
+#todo-folders li:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.folder-todos li > span,
 #todo-elements li > span {
+  text-align: left;
   overflow-wrap: anywhere;
+  font-size: 15px;
 }
 
-/* Damur was found here */
-#todo-elements li input[type="checkbox"]:checked + span {
-  text-decoration: line-through;
-  color: #b3b3b3;
-  transition: 0.3s ease-in;
-}
-
-/* Style for Checkbox, Optionnal but added so it adapt the global style */
+/* Checkbox Style */
 input[type="checkbox"] {
   -webkit-appearance: none;
   appearance: none;
-
-  width: 20px;
-  height: 20px;
-  border-radius: 4px;
-  background-color: #fff;
+  width: 22px;
+  height: 22px;
+  border: 2px solid #ffffff;
+  border-radius: 6px;
+  background-color: transparent;
   cursor: pointer;
   display: inline-grid;
   place-content: center;
-  vertical-align: middle;
 }
 
 input[type="checkbox"]:checked {
   background-color: #bf21f3;
-  border-color: #8c0bac;
-  transition: 0.1s ease-in;
+  border-color: #bf21f3;
 }
 
 input[type="checkbox"]::before {
   content: "";
   width: 10px;
-  height: 5px;
-  border-left: 2px solid white;
-  border-bottom: 2px solid white;
+  height: 6px;
+  border-left: 2px solid #ffffff;
+  border-bottom: 2px solid #ffffff;
   transform: rotate(-45deg) translate(1px, -1px);
-
-  transform-origin: center;
   scale: 0;
 }
 
@@ -164,83 +213,123 @@ input[type="checkbox"]:checked::before {
   scale: 1;
 }
 
-* {
-  font-family: Helvetica, Arial, sans-serif;
+#todo-elements li input[type="checkbox"]:checked + span,
+.folder-todos li input[type="checkbox"]:checked + span {
+  text-decoration: line-through;
+  color: rgba(255, 255, 255, 0.5);
 }
 
-.delete-btn {
-  background-color: #ffffff;
-  color: rgb(0, 0, 0);
-  width: 20px;
-  height: 20px;
-  border-radius: 5px;
+/* Date & Badges */
+[class^="date-"],
+.todo-category-badge,
+.number-of-todos {
+  background-color: rgba(255, 255, 255, 0.85);
+  color: #1a1a1a;
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.date-overdue {
+  background-color: #ef4444;
+  color: #ffffff;
+}
+.date-today {
+  background-color: #f97316;
+  color: #ffffff;
+}
+.date-this-week {
+  background-color: #e1ff00;
+  color: #1a1a1a;
+}
+.date-future {
+  background-color: #22c55e;
+  color: #ffffff;
+}
+.date-no-due,
+.todo-category-badge,
+.number-of-todos {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+
+/* Buttons */
+.delete-btn,
+.delete-btnCat,
+.delete-btnFolder {
+  background-color: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
   border: none;
   cursor: pointer;
   display: inline-grid;
   place-content: center;
-  vertical-align: middle;
-  flex-shrink: 0;
-  justify-self: end;
-  margin-left: 0;
+  font-weight: bold;
 }
 
-.delete-btn:hover {
-  background-color: rgb(248, 0, 111);
-  color: white;
+.delete-btn:hover,
+.delete-btnCat:hover,
+.delete-btnFolder:hover {
+  background-color: #f43f5e;
+  color: #ffffff;
 }
 
 #delete-all {
-  background-color: #ffffff;
-  color: rgb(0, 0, 0);
-  height: 25px;
-  width: 100px;
-  border-radius: 5px;
-  border: none;
-  cursor: pointer;
-  display: inline-grid;
-  place-content: center;
-  vertical-align: middle;
+  display: block;
+  margin: 24px auto 0 auto;
+  background-color: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  height: auto;
   padding: 10px 20px;
-  margin: 5% 44% 0 44%;
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 #delete-all:hover {
-  background-color: #ff0090;
-  color: rgb(255, 255, 255);
-  height: 25px;
-  border-radius: 5px;
-  border: none;
-  cursor: pointer;
-  display: inline-grid;
-  place-content: center;
-  vertical-align: middle;
-  padding: 10px 20px;
+  background-color: #f43f5e;
 }
 
-/* Optionnal but make the UX better :} Lancer was here */
+/* Footer */
+#deamur {
+  margin-top: auto;
+  padding-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+}
 
+#deamur a {
+  color: #bf21f3;
+  text-decoration: underline;
+}
+
+#deamur a:hover {
+  color: #ffffff;
+}
+
+/* Animations */
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(-5px);
+    transform: translateY(-6px);
   }
   to {
     opacity: 1;
     transform: translateY(0);
   }
-}
-
-#error-message {
-  display: none;
-}
-
-#error-message.show {
-  display: block;
-  animation: fadeIn 0.3s ease-in forwards;
-}
-
-#error-message.shake {
-  animation: shake 0.2s ease-in-out;
 }
 
 @keyframes shake {
@@ -255,5 +344,27 @@ input[type="checkbox"]:checked::before {
   40%,
   80% {
     transform: translateX(4px);
+  }
+}
+
+@media (max-width: 640px) {
+  body {
+    padding: 20px 12px;
+  }
+
+  #todoContainer {
+    padding: 22px 16px;
+  }
+
+  #todo-fill,
+  #category-fill {
+    display: grid;
+    grid-template-columns: 1fr auto;
+  }
+
+  #todo-date-input,
+  #add-todo-button,
+  #add-category-button {
+    width: 100%;
   }
 }

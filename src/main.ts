@@ -1,4 +1,8 @@
 import './style.css'
+import { createTodoElement } from './components/todoItem'
+import { clearStoredTodos, getStoredTodos, saveTodos } from './servcies/storage'
+import type { Todo } from './types/todo'
+import { checkHasOverdueTasks, getTodayString } from './utils/date'
 
 console.log('Hello from typescript')
 
@@ -16,112 +20,59 @@ const todoListContainer = document.getElementById(
 const errorMessage = document.getElementById(
   'error-message',
 ) as HTMLParagraphElement
+const errorMessagePriority = document.getElementById(
+  'overdue-message',
+) as HTMLParagraphElement
 const deleteAllButton = document.getElementById(
   'delete-all',
 ) as HTMLButtonElement
 
-// Define the Todo interface (LS)
-interface Todo {
-  text: string
-  completed: boolean
-  date: string | null
-}
+// Local State
+let todos: Todo[] = getStoredTodos()
 
-let todos: Todo[] = []
-const savedTodos = localStorage.getItem('todos')
-if (savedTodos) {
-  todos = JSON.parse(savedTodos)
-}
-
-// change color on due date
-const getDueDateClass = (dateString: string): string | null => {
-  const today = new Date()
-  today.setHours(0, 0, 0, 0)
-
-  const dueDate = new Date(`${dateString}T00:00:00`)
-  dueDate.setHours(0, 0, 0, 0)
-
-  const diffTime = dueDate.getTime() - today.getTime()
-  const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24))
-
-  if (diffDays < 0) {
-    return 'date-overdue'
-  }
-
-  if (diffDays === 0) {
-    return 'date-today'
-  }
-
-  if (diffDays >= 2 && diffDays <= 4) {
-    return 'date-this-week'
-  }
-
-  if (diffDays > 4) {
-    return 'date-future'
-  }
-
-  return null
-}
-
-// Display the todos on page load
-todos.forEach((todo) => {
-  const p = document.createElement('p')
-
-  if (todo.date) {
-    const timeElement = document.createElement('time')
-    timeElement.dateTime = todo.date
-    timeElement.textContent = todo.date
-    const dueDateClass = getDueDateClass(todo.date)
-    if (dueDateClass) {
-      timeElement.classList.add(dueDateClass)
-    }
-    p.appendChild(timeElement)
+const updateOverdueMessage = () => {
+  if (checkHasOverdueTasks(todos)) {
+    errorMessagePriority.classList.add('show', 'overdue-message')
+    errorMessagePriority.textContent =
+      'Please do the overdue task(s)! Use your time wisely. . .'
   } else {
-    p.classList.add('date-no-due')
-    p.textContent = 'No due date'
+    errorMessagePriority.classList.remove('show', 'overdue-message')
+    errorMessagePriority.textContent = ''
   }
+}
 
-  const li = document.createElement('li')
-  const checkbox = document.createElement('input')
-  checkbox.type = 'checkbox'
-  const todoSpan = document.createElement('span')
-  todoSpan.textContent = todo.text
+const renderTodos = () => {
+  todoListContainer.innerHTML = ''
 
-  const deleteButton = document.createElement('button')
-  deleteButton.textContent = '✕'
-  deleteButton.classList.add('delete-btn')
-  deleteButton.addEventListener('click', () => {
-    todos = todos.filter((t) => t !== todo)
-    localStorage.setItem('todos', JSON.stringify(todos))
-    li.remove()
+  todos.forEach((todo) => {
+    const todoElement = createTodoElement(
+      todo,
+      (idToDelete: string) => {
+        todos = todos.filter((t) => t.id !== idToDelete)
+        saveTodos(todos)
+        renderTodos()
+      },
+      (idToToggle: string, completed: boolean) => {
+        const target = todos.find((t) => t.id === idToToggle)
+        if (target) {
+          target.completed = completed
+          saveTodos(todos)
+          renderTodos()
+        }
+      },
+    )
+    todoListContainer.appendChild(todoElement)
   })
 
-  checkbox.checked = todo.completed
+  updateOverdueMessage()
+}
 
-  // Append elements to the list item and then to the todoElements
-  li.appendChild(p)
-  li.appendChild(checkbox)
-  li.appendChild(todoSpan)
-  li.appendChild(deleteButton)
-  todoListContainer.appendChild(li)
-
-  checkbox.addEventListener('change', () => {
-    todo.completed = checkbox.checked
-    localStorage.setItem('todos', JSON.stringify(todos))
-  })
-})
-
+// Add events
 addTodoButton.addEventListener('click', () => {
   const todoText = todoInput.value.trim()
   const todoDate = todoDateInput.value.trim()
-  const now = new Date()
-  const today = new Date(
-    now.getTime() - now.getTimezoneOffset() * 60_000,
-  )
-    .toISOString()
-    .split('T')[0]
+  const today = getTodayString()
 
-  // Validate the input and add the new todo
   if (todoText) {
     if (todoDate && todoDate < today) {
       errorMessage.textContent =
@@ -132,12 +83,21 @@ addTodoButton.addEventListener('click', () => {
 
     const finalDate = todoDate !== '' ? todoDate : null
 
-    todos.push({ text: todoText, completed: false, date: finalDate })
-    localStorage.setItem('todos', JSON.stringify(todos))
+    todos.push({
+      id: crypto.randomUUID(),
+      text: todoText,
+      completed: false,
+      date: finalDate,
+    })
 
+    saveTodos(todos)
+
+    todoInput.value = ''
+    todoDateInput.value = ''
     errorMessage.textContent = ''
     errorMessage.classList.remove('show')
-    window.location.reload()
+
+    renderTodos()
   } else {
     errorMessage.textContent =
       "Please enter both a to-do and a date. You can't do nothing about your life. . ."
@@ -147,9 +107,9 @@ addTodoButton.addEventListener('click', () => {
 
 deleteAllButton.addEventListener('click', () => {
   todos = []
-
-  localStorage.removeItem('todos')
-
-  todoListContainer.innerHTML = ''
+  clearStoredTodos()
+  renderTodos()
 })
-// Rasiel was here ;} RK too :]
+
+// Initial Load
+renderTodos()
