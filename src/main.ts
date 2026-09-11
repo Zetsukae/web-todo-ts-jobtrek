@@ -1,12 +1,6 @@
 import './style.css'
 import { createTodoElement } from './components/todoItem'
-import {
-  createTodoInApi,
-  deleteAllTodosInApi,
-  deleteTodoInApi,
-  getTodosFromApi,
-  updateTodoInApi,
-} from './servcies/storage'
+import { clearStoredTodos, getStoredTodos, saveTodos } from './servcies/storage'
 import type { Todo } from './types/todo'
 import { checkHasOverdueTasks, getTodayString } from './utils/date'
 
@@ -34,7 +28,7 @@ const deleteAllButton = document.getElementById(
 ) as HTMLButtonElement
 
 // Local State
-let todos: Todo[] = []
+let todos: Todo[] = getStoredTodos()
 
 const updateOverdueMessage = () => {
   if (checkHasOverdueTasks(todos)) {
@@ -53,17 +47,16 @@ const renderTodos = () => {
   todos.forEach((todo) => {
     const todoElement = createTodoElement(
       todo,
-      [], // Emplacement pour les catégories dans les versions futures
-      async (idToDelete) => {
-        await deleteTodoInApi(idToDelete)
+      (idToDelete: string) => {
         todos = todos.filter((t) => t.id !== idToDelete)
+        saveTodos(todos)
         renderTodos()
       },
-      async (idToToggle, done) => {
+      (idToToggle: string, completed: boolean) => {
         const target = todos.find((t) => t.id === idToToggle)
         if (target) {
-          await updateTodoInApi(idToToggle, { done })
-          target.done = done
+          target.completed = completed
+          saveTodos(todos)
           renderTodos()
         }
       },
@@ -75,7 +68,7 @@ const renderTodos = () => {
 }
 
 // Add events
-addTodoButton.addEventListener('click', async () => {
+addTodoButton.addEventListener('click', () => {
   const todoText = todoInput.value.trim()
   const todoDate = todoDateInput.value.trim()
   const today = getTodayString()
@@ -90,14 +83,14 @@ addTodoButton.addEventListener('click', async () => {
 
     const finalDate = todoDate !== '' ? todoDate : null
 
-    const newTodo = await createTodoInApi({
-      title: todoText,
-      content: null,
-      due_date: finalDate,
-      done: false,
+    todos.push({
+      id: crypto.randomUUID(),
+      text: todoText,
+      completed: false,
+      date: finalDate,
     })
 
-    todos.push(newTodo)
+    saveTodos(todos)
 
     todoInput.value = ''
     todoDateInput.value = ''
@@ -112,16 +105,11 @@ addTodoButton.addEventListener('click', async () => {
   }
 })
 
-deleteAllButton.addEventListener('click', async () => {
-  await deleteAllTodosInApi()
+deleteAllButton.addEventListener('click', () => {
   todos = []
+  clearStoredTodos()
   renderTodos()
 })
 
 // Initial Load
-const loadInitialData = async () => {
-  todos = await getTodosFromApi()
-  renderTodos()
-}
-
-void loadInitialData()
+renderTodos()
