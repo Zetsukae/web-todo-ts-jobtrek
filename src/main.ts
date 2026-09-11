@@ -1,10 +1,6 @@
 import './style.css'
 import { createTodoElement } from './components/todoItem'
-import {
-  clearStoredTodos,
-  getStoredTodos,
-  saveTodos,
-} from './servcies/storage'
+import { clearStoredTodos, getStoredTodos, saveTodos } from './servcies/storage'
 import type { Todo } from './types/todo'
 import { checkHasOverdueTasks, getTodayString } from './utils/date'
 
