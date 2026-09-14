@@ -1,33 +1,86 @@
-# Web todo template
+# Documents
 
-## Prerequisites
+*Please before continuing take a look at these documents!*
 
-- [Node.js](https://nodejs.org) version 24. **Use [fnm](https://github.com/Schniz/fnm?tab=readme-ov-file#installation) to get the latest version**
-- [Pnpm](https://pnpm.io/installation#on-posix-systems) version 10. **Use pnpm official script for posix systems**
+[Github Repository](https://github.com/Zetsukae/web-todo-ts-jobtrek)
 
-## Setup
+[JobTrek documentation](https://docs.in.jt-lab.ch/apprentis/brief-projets/jt_dev_b41_web-todo-list-with-typescript.pdf) *(Internal use only)*
 
-1. Fork and clone this repository.
-2. From your CLI, move to the project repository with `cd`.
-3. Install the dependencies with `pnpm i`.
+[RestAPI documentation from JobTrek](https://swagger.todos.in.jt-lab.ch/#/) -
+[RestAPI documentation from RedHat](https://www.redhat.com/fr/topics/api/what-is-a-rest-api)
 
-That's all ! You are ready to go.
+---
 
-## How to develop with this template ?
+# A brief description time
 
-This template is based on [vite](https://vite.dev/), with some additional
-tooling. Here are the most important things :
+**The web app helps you organize your life!** Stop trying to keep everything you have to do in your head, give your brain a rest and write it down. Here's what my web app can do:
 
-- Use `pnpm dev` command to launch the development server on [localhost:5173](http://localhost:5173/).
-- Use `pnpm check-types` to launch the [TypeScript](https://www.typescriptlang.org/) type checker. This will verify the project type correctness.
-- Use `pnpm format` to format all project files correctly.
-- Use `pnpm lint` to run the [biome](https://biomejs.dev/) linter, and catch some errors statically.
+- **Create to-dos** with specific dates and categories.
 
-These commands allow you to create good quality commits. Don't forget to lint and format before your commits.
+- **Delete tasks** whenever you want.
 
-## Continuous integration
+- **Create and edit custom categories** using different colors.
 
-This repo includes three [GitHub actions](https://docs.github.com/en/actions) :
+- **Create Folders** to organize what you need to do.
 
-- One to automatically deploy the project to GitHub pages. This workflow executes on each commit in the main branch. **You must update the `base` field in the [vite.config.ts](./vite.config.ts) file to your repository name for this to work !!! And activate GitHub pages source to `GitHub Actions` in your repository settings**.
-- One to check the code formatting, linting and types, this one executes on pull requests.
+---
+
+# How can I make my own?
+
+You can make it from scratch in **HTML/CSS/JS** (you can use other programming languages!) or use some template available online -> [I recommend this one!](https://github.com/Kaiserabbas/Todo-List-Template).
+
+---
+
+# LocalStorage or RestAPI?
+
+> Want to make it really fast and simple? I recommend to use **LocalStorage**.
+> Want to take your time and make it more secure? I recommend to use the **RestAPI**.
+
+### But what's the difference?
+
+| Feature                  | LocalStorage                              | RestAPI                             |
+| :----------------------- | :---------------------------------------- | ----------------------------------- |
+| **Where the data lives** | User's browser                            | Centralized server / Database       |
+| **Data sharing**         | Locked to one browser and device          | Accessible across any device / user |
+| **Storage limit**        | **5MB to 10MB** per domain                | Virtually **unlimited**             |
+| **Security**             | Low (Vulnerable to **XSS attacks**)       | High (Server-side controls)         |
+| **Operations**           | **Synchronous** (Blocks main thread)      | **Asynchronous** (HTTP requests)    |
+| **Data Types**           | **Strings only** (Requires serialization) | **Any format** (JSON, images, etc.) |
+
+---
+
+# Launch the project
+
+1. Install the dependencies:
+
+ ```bash
+ pnpm install
+ ```
+
+1. Start the development server:
+
+ ```bash
+ pnpm dev
+ ```
+
+1. Open [http://localhost:5173](http://localhost:5173) in your browser.
+
+The development server reloads automatically when you modify the source files.
+
+---
+
+# Here's usefull commands for development
+
+| Commnand                 | Role                                      |
+| :----------------------- | :---------------------------------------- |
+| **pnpm i**               | Install dependencies.                     |
+| **pnpm dev**             | launch the dev. server on localhost:5173. |
+| **pnpm check-types**     | launch the TypeScript type checker.       |
+| **pnpm format**          | format all project files correctly.       |
+| **pnpm lint**            | run the biome linter, catch some errors.  |
+
+---
+
+# And now?
+
+**Now** you have **everything** to make your **Own**! if you're stuck don't hesitate to ask question in different **Forums**. If you want a model without copying, just to see how it **looks like**, [I recommend this one!](https://github.com/Kaiserabbas/Todo-List-Template).

@@ -12,8 +12,8 @@ export const checkHasOverdueTasks = (todos: Todo[]): boolean => {
   today.setHours(0, 0, 0, 0)
 
   return todos.some((todo) => {
-    if (!todo.date || todo.completed) return false
-    const dueDate = new Date(`${todo.date}T00:00:00`)
+    if (!todo.due_date || todo.done) return false
+    const dueDate = new Date(`${todo.due_date}T00:00:00`)
     dueDate.setHours(0, 0, 0, 0)
     return dueDate.getTime() < today.getTime()
   })

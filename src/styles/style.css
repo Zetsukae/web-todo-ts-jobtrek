@@ -6,6 +6,79 @@
   padding: 0;
 }
 
+.custom-select,
+.custom-select::picker(select) {
+  appearance: base-select;
+}
+
+.folder-todos {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+  width: 100%;
+}
+
+.divider {
+  border: 3px solid #b269d7;
+  border-radius: 5px;
+  margin: 10px 0 20px 0;
+}
+
+.custom-select {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 8px;
+  background-color: #ffffff;
+  cursor: pointer;
+  height: 46px;
+}
+
+.folder-dropdown-btn {
+  display: inline-grid;
+  place-items: center;
+  padding: 0;
+  background-color: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  border-radius: 5px;
+  border: none;
+  height: 26px;
+  width: 26px;
+  outline: none;
+  cursor: pointer;
+}
+
+.folder-dropdown-btn:hover {
+  border-color: #bf21f3;
+  box-shadow: 0 0 0 4px rgba(191, 33, 243, 0.3);
+}
+
+.contentWrapper {
+  margin-top: 2%;
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  width: 100%;
+  max-width: 2000px;
+}
+
+input[type="text"] {
+  flex: 1;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  outline: none;
+  font-size: 15px;
+}
+
+input[type="text"]:focus,
+#todo-date-input:focus {
+  background-color: #ffffff;
+  border-color: #bf21f3;
+  box-shadow: 0 0 0 4px rgba(191, 33, 243, 0.3);
+}
+
 body {
   display: flex;
   flex-direction: column;
@@ -16,18 +89,43 @@ body {
   color: #ffffff;
 }
 
+/* This loading spinner is from: https://cssloaders.github.io/ */
+.loading-spinner {
+  --color-1: #fff;
+  --size: 1px;
+
+  width: calc(48 * var(--size));
+  height: calc(48 * var(--size));
+  border-radius: 50%;
+  display: inline-block;
+  border-top: calc(3 * var(--size)) solid var(--color-1);
+  border-right: calc(3 * var(--size)) solid transparent;
+  box-sizing: border-box;
+
+  margin-bottom: 20px;
+
+  animation: rotation 1s linear infinite;
+}
+
+.loading-pos {
+  display: flex;
+  justify-content: center;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/**/
+
 #web-title,
 #category-title {
   text-align: center;
-}
-
-.contentWrapper {
-  margin-top: 2%;
-  display: flex;
-  justify-content: center;
-  gap: 24px;
-  width: 100%;
-  max-width: 2000px;
 }
 
 #todoContainer,
@@ -44,7 +142,6 @@ body {
     0 8px 10px -6px rgba(0, 0, 0, 0.3);
 }
 
-.overdue-message,
 #error-message,
 #error-category {
   display: none;
@@ -58,14 +155,12 @@ body {
   margin: 20px 0 10px 0;
 }
 
-.overdue-message.show,
 #error-message.show,
 #error-category.show {
   display: block;
   animation: fadeIn 0.3s ease-in forwards;
 }
 
-.overdue-message.shake,
 #error-message.shake,
 #error-category.shake {
   animation: shake 0.2s ease-in-out;
@@ -79,21 +174,6 @@ body {
   margin: 24px 0 15px;
 }
 
-#todo-list {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 24px;
-}
-
-input[type="text"] {
-  flex: 1;
-  padding: 12px 16px;
-  border-radius: 8px;
-  border: 2px solid transparent;
-  outline: none;
-  font-size: 15px;
-}
-
 #todo-input,
 #todo-date-input,
 #add-todo-button,
@@ -101,8 +181,10 @@ input[type="text"] {
   height: 46px;
 }
 
-#todo-input {
-  min-width: 0;
+#todo-list {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 24px;
 }
 
 #todo-date-input {
@@ -111,13 +193,7 @@ input[type="text"] {
   border: 2px solid transparent;
   outline: none;
   font-size: 14px;
-}
-
-input[type="text"]:focus,
-#todo-date-input:focus {
-  background-color: #ffffff;
-  border-color: #bf21f3;
-  box-shadow: 0 0 0 4px rgba(191, 33, 243, 0.3);
+  width: 50px;
 }
 
 #add-todo-button,
@@ -132,10 +208,25 @@ input[type="text"]:focus,
   cursor: pointer;
 }
 
+#todo-input {
+  min-width: 0;
+}
+
+#add-todo-button:focus-visible,
+#add-category-button:focus-visible,
+#todo-date-input:focus-visible,
+input[type="text"]:focus-visible {
+  outline-offset: 2px;
+}
+
 #add-todo-button:hover,
 #add-category-button:hover,
 #add-folder-button:hover {
   background-color: #5b03bf;
+  box-shadow: 0 0 0 4px rgba(164, 1, 161, 0.4);
+}
+
+.custom-select:hover {
   box-shadow: 0 0 0 4px rgba(164, 1, 161, 0.4);
 }
 
@@ -148,6 +239,21 @@ input[type="text"]:focus,
   flex-direction: column;
   gap: 10px;
   width: 100%;
+}
+
+.category-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  height: 54px;
+  margin-bottom: 10px;
+  padding: 12px 16px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(191, 33, 243, 0.4);
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
 }
 
 .folder-todos li,
@@ -165,6 +271,7 @@ input[type="text"]:focus,
   border: 1px solid rgba(191, 33, 243, 0.4);
   border-radius: 8px;
   transition: background-color 0.2s ease;
+  cursor: grab;
 }
 
 .folder-todos li:hover,
@@ -180,7 +287,51 @@ input[type="text"]:focus,
   font-size: 15px;
 }
 
-/* Checkbox Style */
+.folder-name {
+  -webkit-text-stroke-width: 0.5px;
+  -webkit-text-stroke-color: rgba(191, 33, 243, 0.4);
+  font-weight: bold;
+  text-align: center;
+}
+
+.folder-name-completed {
+  text-decoration: line-through;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.folder-todos li > span,
+#todo-folders li > span {
+  overflow-wrap: anywhere;
+}
+
+.number-of-todos {
+  font-size: 12px;
+}
+
+.category-item .categoryPill {
+  flex: 1;
+  width: auto;
+  margin: 0;
+  padding: 0.5rem 0.8rem;
+  border-radius: 9px;
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.category-action-button {
+  border: none;
+  border-radius: 6px;
+  padding: 0.45rem 0.75rem;
+  background: rgba(191, 33, 243, 0.16);
+  color: #fff;
+  cursor: pointer;
+}
+
+/* Style for Checkbox, Optionnal but added so it adapt the global style */
 input[type="checkbox"] {
   -webkit-appearance: none;
   appearance: none;
@@ -213,13 +364,13 @@ input[type="checkbox"]:checked::before {
   scale: 1;
 }
 
+/* Deamur was found here (yeah they're name changed.) */
 #todo-elements li input[type="checkbox"]:checked + span,
 .folder-todos li input[type="checkbox"]:checked + span {
   text-decoration: line-through;
   color: rgba(255, 255, 255, 0.5);
 }
-
-/* Date & Badges */
+/* But it still Damur */
 [class^="date-"],
 .todo-category-badge,
 .number-of-todos {
@@ -230,6 +381,7 @@ input[type="checkbox"]:checked::before {
   font-size: 12px;
   font-weight: 600;
   white-space: nowrap;
+  cursor: default;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -258,7 +410,6 @@ input[type="checkbox"]:checked::before {
   color: #ffffff;
 }
 
-/* Buttons */
 .delete-btn,
 .delete-btnCat,
 .delete-btnFolder {
@@ -274,11 +425,38 @@ input[type="checkbox"]:checked::before {
   font-weight: bold;
 }
 
+#todo-folders li > .delete-btnFolder {
+  grid-column: -1;
+}
+
+#todo-folders > li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+#todo-folders > li > .folder-todos {
+  flex: 1 1 100%;
+  min-width: 0;
+}
+
+#todo-folders > li > .folder-name {
+  flex: 1;
+  min-width: 0;
+  text-align: center;
+}
+
 .delete-btn:hover,
 .delete-btnCat:hover,
 .delete-btnFolder:hover {
   background-color: #f43f5e;
   color: #ffffff;
+}
+
+#delete-all-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
 }
 
 #delete-all {
@@ -299,7 +477,7 @@ input[type="checkbox"]:checked::before {
   background-color: #f43f5e;
 }
 
-/* Footer */
+/* 'deamur' is the footer! (easterEgg of my Game) */
 #deamur {
   margin-top: auto;
   padding-top: 20px;
@@ -307,6 +485,7 @@ input[type="checkbox"]:checked::before {
   justify-content: center;
   align-items: center;
   gap: 6px;
+
   font-size: 14px;
   color: rgba(255, 255, 255, 0.7);
 }
@@ -320,7 +499,48 @@ input[type="checkbox"]:checked::before {
   color: #ffffff;
 }
 
-/* Animations */
+#category-color-input {
+  -webkit-appearance: none; /* Hide native style of Chrome/Safari */
+  -moz-appearance: none; /* Hide native style of Firefox */
+  appearance: none;
+
+  width: 45px;
+  height: 45px;
+  border: 2px solid #e2e8f0;
+  border-radius: 20%;
+  background: transparent;
+  cursor: pointer;
+  overflow: hidden;
+  padding: 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+#category-color-input:hover {
+  border-color: #cbd5e1;
+}
+
+#category-color-input:focus {
+  outline: none;
+  border-color: #ab32da;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+}
+
+#category-color-input::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+#category-color-input::-webkit-color-swatch {
+  border: none;
+  border-radius: 15%;
+}
+
+/*(Firefox) */
+#category-color-input::-moz-color-swatch {
+  border: none;
+  border-radius: 15%;
+}
+
+/* Optionnal but make the UX better :} Lancer was here */
 @keyframes fadeIn {
   from {
     opacity: 0;
