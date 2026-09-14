@@ -1,13 +1,81 @@
+<!-- Note: This project uses AI as a tool. I used it to help me understand how to implement the restAPI. -->
+
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/todo.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Web todolist project</title>
-  </head>
-  <body>
-    <h1>Web todolist app</h1>
-    <script type="module" src="/src/main.ts"></script>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/todo.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Web todolist project</title>
+</head>
+
+<body>
+  <h1>Web todolist app</h1>
+  <div class="contentWrapper">
+    <!-- Here's the Main Section -->
+    <section id="todoContainer">
+      <h1 id="web-title">Todos</h1>
+      <p id="error-message" class="shake"></p>
+      <div id="todo-fill">
+        <select id="type-select" class="custom-select" aria-label="Select to create a todo or a folder">
+          <optgroup label="Select a creation type">
+            <option value="To-do">Create a To-Do</option>
+            <option value="Folder">Create a Folder</option>
+          </optgroup>
+        </select>
+        <input id="todo-input" type="text" placeholder="Enter the name of the to-do." />
+        <input id="folder-input" type="text" placeholder="Enter the name of the folder." />
+        <input type="date" id="todo-date-input" />
+        <select id="todo-assignment-select" class="custom-select" aria-label="Select a category or folder">
+          <optgroup label="Select an organizer"></optgroup>
+          <!-- Here appear option 'none' -->
+          <optgroup label="Categories">
+            <!-- Here will appear options dynamically depends of created categories -->
+          </optgroup>
+          <optgroup label="Folders">
+            <!-- Here will appear options dynamically depends of created folders -->
+          </optgroup>
+        </select>
+        <button type="button" id="add-todo-button">Add To-do</button>
+        <button type="button" id="add-folder-button">Add Folder</button>
+      </div>
+      <div class="loading-pos">
+        <span class="loading-spinner"></span>
+      </div>
+      <ul id="todo-folders"></ul>
+      <hr id="folder-divider" class="divider" hidden />
+      <div id="todo-list">
+        <ul id="todo-elements"></ul>
+      </div>
+    </section>
+    <!-- Here's the Category Section -->
+    <section id="categoryContainer">
+      <h1 id="category-title">Categories</h1>
+      <p id="error-category" class="shake"></p>
+      <div id="category-fill">
+        <input id="category-name-input" type="text" maxlength="36" placeholder="Enter the name of the category" />
+        <input type="color" id="category-color-input" value="#d042ff">
+        <button type="button" id="add-category-button">Add Category</button>
+      </div>
+      <div class="loading-pos">
+        <span class="loading-spinner"></span>
+      </div>
+      <div id="categories-elements">
+      </div>
+    </section>
+    <!-- If you want to add another section, it should be there -->
+  </div>
+  <div id="delete-all-container">
+    <button type="button" id="delete-all">Delete All</button>
+  </div>
+<footer id="deamur">
+  <p>© 7etsukae | You should try </p>
+  <a href="https://underfang.com">Underfang</a>
+  <!-- Go check 'Underfang' on Steam to support me! -->
+</footer>
+<script type="module" src="/src/main.ts"></script>
+</body>
+
 </html>
+<!-- Leax was here. -->
