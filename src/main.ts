@@ -358,7 +358,8 @@ const loadData = async () => {
     renderFolders()
   } catch (error) {
     console.log('Failed to load initial data:', error)
-    errorCategory.textContent = 'Failed to load data. Please check your connection.'
+    errorCategory.textContent =
+      'Failed to load data. Please check your connection.'
     errorCategory?.classList.add('show', 'shake')
   } finally {
     hideLoading()
