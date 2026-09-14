@@ -86,7 +86,7 @@ const todoAssignmentSelect = document.querySelector(
   '#todo-assignment-select',
 ) as HTMLSelectElement
 
-const TypeSelect = document.querySelector('#type-select') as HTMLSelectElement
+const typeSelect = document.querySelector('#type-select') as HTMLSelectElement
 const addFolderButton = document.querySelector(
   '#add-folder-button',
 ) as HTMLButtonElement
@@ -152,7 +152,7 @@ const renderTodoAssignmentOptions = () => {
 
 // Get the current Type selected
 const getTypeSelectValue = (): 'To-do' | 'Folder' => {
-  const selectedValue = TypeSelect.value
+  const selectedValue = typeSelect.value
   if (selectedValue === 'To-do' || selectedValue === 'Folder') {
     return selectedValue
   }
@@ -182,7 +182,7 @@ const updateTypeVisibility = () => {
 }
 
 // Events on the TypeSelect
-TypeSelect.addEventListener('change', updateTypeVisibility)
+typeSelect.addEventListener('change', updateTypeVisibility)
 updateTypeVisibility()
 
 const updateOverdueMessage = () => {
@@ -356,6 +356,10 @@ const loadData = async () => {
     renderCategories()
     renderTodos()
     renderFolders()
+  } catch (error) {
+    console.log("Failed to load initial data:", error)
+    errorCategory.textContent = 'Failed to load data. Please check your connection.'
+    errorCategory?.classList.add('show', 'shake')
   } finally {
     hideLoading()
     console.log('> Successful: Data has been loaded.')
