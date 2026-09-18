@@ -1,6 +1,6 @@
 # Documents
 
-*Please before continuing take a look at these documentations!*
+*Please take a look at these documentations before continuing!*
 
 [RestAPI documentation from RedHat](https://www.redhat.com/fr/topics/api/what-is-a-rest-api)
 
@@ -8,27 +8,24 @@
 
 ---
 
-# A brief description time
+# Overview
 
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
 ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
 ![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css&logoColor=white)
 
-**The web app helps you organize your life!** Stop trying to keep everything you have to do in your head, give your brain a rest and write it down. Here's what my web app can do:
+**This web app helps you organize your life!** Stop trying to keep everything you have to do in your head; give your brain a rest and write it down. Here's what my web app can do:
 
 - **Create to-dos** with specific dates and categories.
-
 - **Delete to-dos** whenever you want.
-
 - **Create and edit custom categories** using different colors.
-
-- **Create Folders** to organize what you need to do.
+- **Create folders** to organize what you need to do.
 
 ---
 
 # How can I make my own?
 
-You can make it from scratch in **HTML/CSS/JS** (you can use other programming languages!) or use some template available online -> [I recommend this one!](https://github.com/Kaiserabbas/Todo-List-Template).
+You can build it from scratch using **HTML/CSS/JS** (or any other programming language!), or use an online template -> [I recommend this one!](https://github.com/Kaiserabbas/Todo-List-Template).
 
 ---
 
@@ -36,7 +33,7 @@ You can make it from scratch in **HTML/CSS/JS** (you can use other programming l
 
 ![structure-app](https://i.imgur.com/O3VE7ye.png)
 
-My app communicate with the RestAPI for the backend, and to render the folder it's LocalStorage.
+My app communicates with a REST API for the backend, and relies on LocalStorage to persist folder structures.
 
 ---
 
@@ -47,14 +44,14 @@ My app communicate with the RestAPI for the backend, and to render the folder it
 
 ### But what's the difference?
 
-| Feature                  | LocalStorage                              | RestAPI                             |
-| :----------------------- | :---------------------------------------- | ----------------------------------- |
-| **Where the data lives** | User's browser                            | Centralized server / Database       |
-| **Data sharing**         | Locked to one browser and device          | Accessible across any device / user |
-| **Storage limit**        | **5MB to 10MB** per domain                | Virtually **unlimited**             |
-| **Security**             | Low (Vulnerable to **XSS attacks**)       | High (Server-side controls)         |
-| **Operations**           | **Synchronous** (Blocks main thread)      | **Asynchronous** (HTTP requests)    |
-| **Data Types**           | **Strings only** (Requires serialization) | **Any format** (JSON, images, etc.) |
+| Feature | LocalStorage | REST API |
+| :--- | :--- | :--- |
+| **Where the data lives** | User's browser | Centralized server / Database |
+| **Data sharing** | Locked to one browser and device | Accessible across any device / user |
+| **Storage limit** | **5MB to 10MB** per domain | Virtually **unlimited** |
+| **Security** | Low (Vulnerable to **XSS attacks**) | High (Server-side controls) |
+| **Operations** | **Synchronous** (Blocks main thread) | **Asynchronous** (HTTP requests) |
+| **Data Types** | **Strings only** (Requires serialization) | **Any format** (JSON, images, etc.) |
 
 ---
 
@@ -62,17 +59,17 @@ My app communicate with the RestAPI for the backend, and to render the folder it
 
 1. Install the dependencies:
 
- ```bash
- pnpm install #or pnpm i
- ```
+    ```bash
+    pnpm install # or pnpm i
+    ```
 
-1. Start the development server:
+2. Start the development server:
 
- ```bash
- pnpm dev
- ```
+    ```bash
+    pnpm dev
+    ```
 
-1. Open [http://localhost:5173](http://localhost:5173) in your browser.
+3. Open [http://localhost:5173](http://localhost:5173) in your browser.
 
 The development server reloads automatically when you modify the source files.
 
@@ -80,27 +77,27 @@ The development server reloads automatically when you modify the source files.
 
 # Compile the project
 
-1. Run compilation and optimisation:
+1. Run compilation and optimization:
 
- ```bash
- pnpm build
- ```
-
----
-
-# Here's usefull commands for development
-
-| Commnand                 | Role                                      |
-| :----------------------- | :---------------------------------------- |
-| **pnpm i**               | Install dependencies.                     |
-| **pnpm dev**             | launch the dev. server on localhost:5173. |
-| **pnpm check-types**     | launch the TypeScript type checker.       |
-| **pnpm format**          | format all project files correctly.       |
-| **pnpm lint**            | run the biome linter, catch some errors.  |
-| **pnpm run (x)**         | run a specific script on the package.json |
+    ```bash
+    pnpm build
+    ```
 
 ---
 
-# And now?
+# Useful commands for development
 
-**Now** you have **everything** to make your **Own**! if you're stuck don't hesitate to ask question in different **Forums**. If you want a model without copying, just to see how it **looks like**, [I recommend this one!](https://github.com/Kaiserabbas/Todo-List-Template).
+| Command | Role |
+| :--- | :--- |
+| **pnpm i** | Install dependencies. |
+| **pnpm dev** | Launch the dev server on localhost:5173. |
+| **pnpm check-types** | Launch the TypeScript type checker. |
+| **pnpm format** | Format all project files correctly. |
+| **pnpm lint** | Run the Biome linter to catch errors. |
+| **pnpm run (script)** | Run a specific script from `package.json`. |
+
+---
+
+# What's next?
+
+Now you have everything you need to build your own! If you get stuck, don't hesitate to ask questions in developer forums. If you want a reference model without copying directly just to see what it looks like, [check out this template!](https://github.com/Kaiserabbas/Todo-List-Template).
