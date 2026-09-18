@@ -13,7 +13,7 @@ export const checkHasOverdueTasks = (todos: Todo[]): boolean => {
 
   return todos.some((todo) => {
     if (!todo.due_date || todo.done) return false
-    const dueDate = new Date(`${todo.due_date}T00:00:00Z`)
+    const dueDate = new Date(`${todo.due_date}T00:00:00`)
     return dueDate.getTime() < today.getTime()
   })
 }
