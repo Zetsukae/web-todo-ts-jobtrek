@@ -4,9 +4,6 @@
 
 [Github Repository](https://github.com/Zetsukae/web-todo-ts-jobtrek)
 
-[JobTrek documentation](https://docs.in.jt-lab.ch/apprentis/brief-projets/jt_dev_b41_web-todo-list-with-typescript.pdf) *(Internal use only)*
-
-[RestAPI documentation from JobTrek](https://swagger.todos.in.jt-lab.ch/#/) -
 [RestAPI documentation from RedHat](https://www.redhat.com/fr/topics/api/what-is-a-rest-api)
 
 ---
@@ -17,7 +14,7 @@
 
 - **Create to-dos** with specific dates and categories.
 
-- **Delete tasks** whenever you want.
+- **Delete tyo-dos** whenever you want.
 
 - **Create and edit custom categories** using different colors.
 
@@ -31,10 +28,10 @@ You can make it from scratch in **HTML/CSS/JS** (you can use other programming l
 
 ---
 
-# LocalStorage or RestAPI?
+# LocalStorage or Backend (REST API)?
 
-> Want to make it really fast and simple? I recommend to use **LocalStorage**.
-> Want to take your time and make it more secure? I recommend to use the **RestAPI**.
+> Want to make it really fast and simple? You can build a **frontend-only app** using **LocalStorage**.
+> Want to access your data from anywhere? You will need a **Backend with a REST API** connected to a database.
 
 ### But what's the difference?
 
@@ -69,6 +66,16 @@ The development server reloads automatically when you modify the source files.
 
 ---
 
+# Compile the project
+
+1. Run compilation and optimisation:
+
+ ```bash
+ pnpm build
+ ```
+
+---
+
 # Here's usefull commands for development
 
 | Commnand                 | Role                                      |
@@ -78,6 +85,7 @@ The development server reloads automatically when you modify the source files.
 | **pnpm check-types**     | launch the TypeScript type checker.       |
 | **pnpm format**          | format all project files correctly.       |
 | **pnpm lint**            | run the biome linter, catch some errors.  |
+| **pnpm run (x)**         | run a specific script on the package.json |
 
 ---
 

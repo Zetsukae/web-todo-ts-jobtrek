@@ -9,7 +9,8 @@ const getTodoCategoryId = (todo: Todo): number | null => {
 
   if (typeof todo.content === 'string') {
     try {
-      const parsed = JSON.parse(todo.content) as { category_id?: number | null }
+      type TodoContent = { category_id?: number | null }
+      const parsed: TodoContent = JSON.parse(todo.content)
       if (typeof parsed.category_id === 'number') {
         return parsed.category_id
       }
@@ -38,15 +39,17 @@ export const createTodoElement = (
   const categoryBadge = document.createElement('p')
   categoryBadge.classList.add('todo-category-badge')
 
+  const DEFAULT_COLOR = '#9ca3af' // Default color for category badge and border
+
   if (todoCategory) {
     categoryBadge.textContent = todoCategory.title ?? 'Category'
-    categoryBadge.style.backgroundColor = todoCategory.color ?? '#9ca3af'
-    li.style.borderColor = todoCategory.color ?? '#9ca3af'
+    categoryBadge.style.backgroundColor = todoCategory.color ?? DEFAULT_COLOR
+    li.style.borderColor = todoCategory.color ?? DEFAULT_COLOR
     li.style.borderWidth = '3px'
   } else {
     categoryBadge.textContent = 'no category'
     categoryBadge.style.backgroundColor = 'rgba(255, 255, 255, 0.08)'
-    categoryBadge.style.borderColor = '#9ca3af'
+    categoryBadge.style.borderColor = DEFAULT_COLOR
   }
 
   if (todo.due_date) {

@@ -11,8 +11,13 @@ export type CreateCategoryInput = Omit<Category, 'id'>
 export const getTodosFromApi = async (): Promise<Todo[]> => {
   const url = `${API_URL}?select=*,categories_todos(category_id,categories(*))`
   const response = await fetch(url)
-  if (!response.ok) throw new Error(`HTTP Error: ${response.status}`)
-  return await response.json()
+  try {
+    if (!response.ok) throw new Error(`HTTP Error: ${response.status}`)
+    return await response.json()
+  } catch (error) {
+    console.error('Error fetching todos:', error)
+    throw error
+  }
 }
 
 // Assign category to todo via junction table
@@ -25,7 +30,12 @@ export const assignCategoryToTodo = async (
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ todo_id: todoId, category_id: categoryId }),
   })
-  if (!response.ok) throw new Error(`HTTP Error: ${response.status}`)
+  try {
+    if (!response.ok) throw new Error(`HTTP Error: ${response.status}`)
+  } catch (error) {
+    console.error('Error assigning category to todo:', error)
+    throw error
+  }
 }
 export const getCategoriesFromApi = async (): Promise<Category[]> => {
   try {

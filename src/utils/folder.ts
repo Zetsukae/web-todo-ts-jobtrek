@@ -2,35 +2,46 @@ import type { Folder, Todo } from '../types/todo'
 
 const FOLDERS_STORAGE_KEY = 'todo-folders'
 
+const FOLDER_ICONS = {
+  COLLAPSED: '⮟',
+  EXPANDED: '⮝',
+} as const
+
 export const getFoldersFromStorage = (): Folder[] => {
   const storedFolders = localStorage.getItem(FOLDERS_STORAGE_KEY)
 
   if (!storedFolders) return []
 
   try {
-    const folders: unknown = JSON.parse(storedFolders)
+    const parsed: unknown = JSON.parse(storedFolders)
 
-    if (!Array.isArray(folders)) return []
+    if (!Array.isArray(parsed)) return []
 
-    return folders.flatMap((folder): Folder[] => {
+    return parsed.flatMap((folder): Folder[] => {
       if (
         typeof folder !== 'object' ||
         folder === null ||
+        !('id' in folder) ||
         typeof folder.id !== 'string' ||
+        !('name' in folder) ||
         typeof folder.name !== 'string'
       ) {
         return []
       }
 
-      const candidate = folder as { todoIds?: unknown; isCollapsed?: unknown }
+      const candidate = folder as {
+        id: string
+        name: string
+        todoIds?: unknown
+        isCollapsed?: unknown
+      }
+
       const todoIds = Array.isArray(candidate.todoIds)
-        ? candidate.todoIds.filter((todoId: unknown): todoId is number =>
-            Number.isInteger(todoId),
-          )
+        ? candidate.todoIds.filter((id): id is number => typeof id === 'number')
         : []
       const isCollapsed = candidate.isCollapsed === true
 
-      return [{ id: folder.id, name: folder.name, todoIds, isCollapsed }]
+      return [{ id: candidate.id, name: candidate.name, todoIds, isCollapsed }]
     })
   } catch {
     return []
@@ -80,10 +91,10 @@ export const createFolderElement = (
   deleteButton.addEventListener('click', () => {
     onDelete(folder.id)
   })
-
+  
   const folderDropdown = document.createElement('button')
   folderDropdown.type = 'button'
-  folderDropdown.textContent = folder.isCollapsed ? '⮟' : '⮝'
+  folderDropdown.textContent = folder.isCollapsed ? FOLDER_ICONS.COLLAPSED : FOLDER_ICONS.EXPANDED
   folderDropdown.className = 'folder-dropdown-btn'
   const folderContainerTodos = document.createElement('div')
   folderContainerTodos.className = 'folder-todos'
@@ -91,10 +102,11 @@ export const createFolderElement = (
 
   folderDropdown.addEventListener('click', () => {
     const isCollapsed = folderContainerTodos.style.display === 'none'
-    folderDropdown.textContent = isCollapsed ? '⮝' : '⮟'
+    folderDropdown.textContent = isCollapsed ? FOLDER_ICONS.EXPANDED : FOLDER_ICONS.COLLAPSED
     folderContainerTodos.style.display = isCollapsed ? 'flex' : 'none'
     onToggle(folder.id, !isCollapsed)
   })
+
 
   const numberOfTodos = document.createElement('span')
   numberOfTodos.className = 'number-of-todos'
@@ -105,6 +117,7 @@ export const createFolderElement = (
     folderTodos.length > 0 && completedTodos === folderTodos.length,
   )
   numberOfTodos.textContent = `${completedTodos}/${folderTodos.length}`
+
 
   folderTodos.forEach((todo) => {
     folderContainerTodos.appendChild(createTodoElement(todo))

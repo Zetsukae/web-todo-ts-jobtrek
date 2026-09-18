@@ -107,13 +107,13 @@ input[type="text"] {
   padding: 10px 15px;
   background: var(--text-main);
   cursor: pointer;
+  color: #1a1a1a;
 }
 
 /* Focus States */
 input[type="text"]:focus,
 #todo-date-input:focus,
 .folder-dropdown-btn:hover {
-  background-color: var(--text-main);
   border-color: var(--accent);
   box-shadow: var(--focus-ring);
 }
@@ -457,17 +457,28 @@ input[type="checkbox"]:checked::before {
   margin-top: auto;
   padding-top: 20px;
   display: flex;
-  justify-content: center;
+  flex-direction: column; /* Stacks children vertically */
   align-items: center;
   gap: 6px;
   font-size: 14px;
   color: var(--text-muted);
 }
 
+.footer-bottom {
+  font-size: 12px;
+}
+
+.footer-top {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
 #deamur a {
   color: var(--accent);
   text-decoration: underline;
 }
+
 #deamur a:hover {
   color: var(--text-main);
 }

@@ -44,53 +44,50 @@ let folders: Folder[] = []
 let editingCategoryId: number | null = null
 
 // Get references to the HTML elements
-const webTitle = document.querySelector('#web-title') as HTMLHeadingElement
+const getRequiredElement = <T extends Element>(selector: string): T => {
+  const element = document.querySelector<T>(selector)
 
-const todoDateInput = document.querySelector(
-  '#todo-date-input',
-) as HTMLInputElement
-const addTodoButton = document.querySelector(
-  '#add-todo-button',
-) as HTMLButtonElement
-const todoInput = document.querySelector('#todo-input') as HTMLInputElement
-const todoListContainer = document.querySelector(
-  '#todo-elements',
-) as HTMLUListElement
-const folderListContainer = document.querySelector(
-  '#todo-folders',
-) as HTMLUListElement
-const folderDivider = document.querySelector('#folder-divider') as HTMLHRElement
-const errorMessage = document.querySelector(
-  '#error-message',
-) as HTMLParagraphElement
-const errorCategory = document.querySelector(
-  '#error-category',
-) as HTMLParagraphElement
-const deleteAllButton = document.querySelector(
-  '#delete-all',
-) as HTMLButtonElement
+  if (!element) {
+    throw new Error(`Required element not found: ${selector}`)
+  }
 
-const categoryInput = document.querySelector(
+  return element
+}
+
+const webTitle = getRequiredElement<HTMLHeadingElement>('#web-title')
+
+const todoDateInput = getRequiredElement<HTMLInputElement>('#todo-date-input')
+const addTodoButton = getRequiredElement<HTMLButtonElement>('#add-todo-button')
+const todoInput = getRequiredElement<HTMLInputElement>('#todo-input')
+const todoListContainer = getRequiredElement<HTMLUListElement>('#todo-elements')
+const folderListContainer =
+  getRequiredElement<HTMLUListElement>('#todo-folders')
+const folderDivider = getRequiredElement<HTMLHRElement>('#folder-divider')
+const errorMessage = getRequiredElement<HTMLParagraphElement>('#error-message')
+const errorCategory =
+  getRequiredElement<HTMLParagraphElement>('#error-category')
+const deleteAllButton = getRequiredElement<HTMLButtonElement>('#delete-all')
+
+const categoryInput = getRequiredElement<HTMLInputElement>(
   '#category-name-input',
-) as HTMLInputElement
-const categoryColor = document.querySelector(
+)
+const categoryColor = getRequiredElement<HTMLInputElement>(
   '#category-color-input',
-) as HTMLInputElement
-const addCategoryButton = document.querySelector(
+)
+const addCategoryButton = getRequiredElement<HTMLButtonElement>(
   '#add-category-button',
-) as HTMLButtonElement
-const categoriesContainer = document.querySelector(
+)
+const categoriesContainer = getRequiredElement<HTMLDivElement>(
   '#categories-elements',
-) as HTMLDivElement
-const todoAssignmentSelect = document.querySelector(
+)
+const todoAssignmentSelect = getRequiredElement<HTMLSelectElement>(
   '#todo-assignment-select',
-) as HTMLSelectElement
+)
 
-const typeSelect = document.querySelector('#type-select') as HTMLSelectElement
-const addFolderButton = document.querySelector(
-  '#add-folder-button',
-) as HTMLButtonElement
-const folderInput = document.querySelector('#folder-input') as HTMLInputElement
+const typeSelect = getRequiredElement<HTMLSelectElement>('#type-select')
+const addFolderButton =
+  getRequiredElement<HTMLButtonElement>('#add-folder-button')
+const folderInput = getRequiredElement<HTMLInputElement>('#folder-input')
 
 const categoryFormElements = {
   input: categoryInput,
@@ -100,7 +97,8 @@ const categoryFormElements = {
 
 // Render the options available on the TodosType.
 const renderTodoAssignmentOptions = () => {
-  const groups = todoAssignmentSelect.querySelectorAll('optgroup')
+  const groups =
+    todoAssignmentSelect.querySelectorAll<HTMLOptGroupElement>('optgroup')
   const organizerGroup = groups[0]
   const categoryGroup = groups[1]
   const folderGroup = groups[2]
