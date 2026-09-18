@@ -1,0 +1,534 @@
+/* --- Variables & Global Reset --- */
+:root {
+  --primary-bg: #390079;
+  --card-bg: #7c00c3;
+  --accent: #bf21f3;
+  --accent-btn: #470297;
+  --text-main: #ffffff;
+  --text-muted: rgba(255, 255, 255, 0.7);
+  --border-pink: rgba(191, 33, 243, 0.4);
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-bg-hover: rgba(255, 255, 255, 0.1);
+  --focus-ring: 0 0 0 4px rgba(191, 33, 243, 0.3);
+  --radius-sm: 6px;
+  --radius-md: 8px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family:
+    system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  padding: 40px 20px;
+  background-color: var(--primary-bg);
+  color: var(--text-main);
+}
+
+/* --- Layout Containers & Typography --- */
+#web-title,
+#category-title {
+  text-align: center;
+}
+
+.contentWrapper {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  width: 100%;
+  max-width: 2000px;
+  margin-top: 2%;
+}
+
+#todoContainer,
+#categoryContainer {
+  flex: 1 1 0;
+  min-width: 0;
+  width: 100%;
+  max-width: 800px;
+  padding: 32px;
+  background-color: var(--card-bg);
+  border-radius: 16px;
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.3),
+    0 8px 10px -6px rgba(0, 0, 0, 0.3);
+}
+
+.divider {
+  border: 3px solid #b269d7;
+  border-radius: 5px;
+  margin: 10px 0 20px;
+}
+
+/* --- Form Controls, Inputs & Selects --- */
+input[type="text"],
+#todo-date-input,
+.custom-select,
+#add-todo-button,
+#add-category-button,
+#add-folder-button {
+  height: 46px;
+  border-radius: var(--radius-md);
+  border: none;
+}
+
+input[type="text"],
+#todo-date-input {
+  border: 2px solid transparent;
+  outline: none;
+}
+
+input[type="text"] {
+  flex: 1;
+  padding: 12px 16px;
+  font-size: 15px;
+}
+#todo-date-input {
+  padding: 12px;
+  font-size: 14px;
+  width: 50px;
+}
+#todo-input {
+  min-width: 0;
+}
+
+.custom-select,
+.custom-select::picker(select) {
+  appearance: base-select;
+}
+.custom-select {
+  padding: 10px 15px;
+  background: var(--text-main);
+  cursor: pointer;
+  color: #1a1a1a;
+}
+
+/* Focus States */
+input[type="text"]:focus,
+#todo-date-input:focus,
+.folder-dropdown-btn:hover {
+  border-color: var(--accent);
+  box-shadow: var(--focus-ring);
+}
+
+:is(
+  #add-todo-button,
+  #add-category-button,
+  #todo-date-input,
+  input[type="text"]
+):focus-visible {
+  outline-offset: 2px;
+}
+
+/* --- Buttons --- */
+#add-todo-button,
+#add-category-button,
+#add-folder-button {
+  background-color: var(--accent-btn);
+  color: var(--text-main);
+  padding: 12px 20px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+#add-todo-button:hover,
+#add-category-button:hover,
+#add-folder-button:hover,
+.custom-select:hover {
+  box-shadow: 0 0 0 4px rgba(164, 1, 161, 0.4);
+}
+
+.folder-dropdown-btn,
+.delete-btn,
+.delete-btnCat,
+.delete-btnFolder,
+#delete-all {
+  background-color: rgba(255, 255, 255, 0.15);
+  color: var(--text-main);
+  border: none;
+  cursor: pointer;
+}
+
+.folder-dropdown-btn {
+  display: inline-grid;
+  place-items: center;
+  border-radius: 5px;
+  height: 26px;
+  width: 26px;
+  outline: none;
+}
+
+.delete-btn,
+.delete-btnCat,
+.delete-btnFolder {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-sm);
+  display: inline-grid;
+  place-content: center;
+  font-weight: bold;
+}
+
+:is(.delete-btn, .delete-btnCat, .delete-btnFolder, #delete-all):hover {
+  background-color: #f43f5e;
+  color: var(--text-main);
+}
+
+#delete-all-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+#delete-all {
+  display: block;
+  margin: 24px auto 0;
+  padding: 10px 20px;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+/* --- Component Groups, Lists & Items --- */
+#todo-fill,
+#category-fill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 24px 0 15px;
+}
+
+#todo-list {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 24px;
+}
+
+#todo-elements,
+#categories-elements,
+#todo-folders,
+.folder-todos {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.folder-todos {
+  grid-column: 1 / -1;
+  min-width: 0;
+}
+
+.category-item,
+.folder-todos li,
+#todo-elements li,
+#todo-folders li,
+.categoryPill {
+  width: 100%;
+  gap: 10px;
+  margin-bottom: 10px;
+  padding: 12px 16px;
+  background-color: var(--glass-bg);
+  border: 1px solid var(--border-pink);
+  border-radius: var(--radius-md);
+  transition: background-color 0.2s ease;
+}
+
+.category-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 54px;
+}
+
+.folder-todos li,
+#todo-elements li,
+#todo-folders li,
+.categoryPill {
+  display: grid;
+  grid-template-columns: auto auto 1fr auto auto;
+  align-items: center;
+  cursor: grab;
+}
+
+:is(.folder-todos, #todo-elements, #todo-folders) li:hover {
+  background-color: var(--glass-bg-hover);
+}
+
+:is(.folder-todos, #todo-elements, #todo-folders) li > span {
+  overflow-wrap: anywhere;
+  text-align: left;
+  font-size: 15px;
+}
+
+.folder-name {
+  -webkit-text-stroke: 0.5px var(--border-pink);
+  font-weight: bold;
+  text-align: center;
+}
+
+.folder-name-completed,
+:is(#todo-elements, .folder-todos) li input[type="checkbox"]:checked + span {
+  text-decoration: line-through;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+#todo-folders > li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+#todo-folders > li > .folder-todos {
+  flex: 1 1 100%;
+  min-width: 0;
+}
+#todo-folders > li > .folder-name {
+  flex: 1;
+  min-width: 0;
+}
+#todo-folders li > .delete-btnFolder {
+  grid-column: -1;
+}
+
+.category-item .categoryPill {
+  flex: 1;
+  width: auto;
+  margin: 0;
+  padding: 0.5rem 0.8rem;
+  border-radius: 9px;
+  border: none;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.category-action-button {
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 0.45rem 0.75rem;
+  background: rgba(191, 33, 243, 0.16);
+  color: var(--text-main);
+  cursor: pointer;
+}
+
+/* --- Checkboxes & Badges --- */
+input[type="checkbox"] {
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  border: 2px solid var(--text-main);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  cursor: pointer;
+  display: inline-grid;
+  place-content: center;
+}
+
+input[type="checkbox"]:checked {
+  background-color: var(--accent);
+  border-color: var(--accent);
+}
+
+input[type="checkbox"]::before {
+  content: "";
+  width: 10px;
+  height: 6px;
+  border-left: 2px solid var(--text-main);
+  border-bottom: 2px solid var(--text-main);
+  transform: rotate(-45deg) translate(1px, -1px);
+  scale: 0;
+}
+
+input[type="checkbox"]:checked::before {
+  scale: 1;
+}
+
+[class^="date-"],
+.todo-category-badge,
+.number-of-todos {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: var(--text-main);
+  border-radius: var(--radius-sm);
+  padding: 4px 8px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: default;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.date-overdue {
+  background-color: #ef4444;
+}
+.date-today {
+  background-color: #f97316;
+}
+.date-this-week {
+  background-color: #e1ff00;
+  color: #1a1a1a;
+}
+.date-future {
+  background-color: #22c55e;
+}
+
+/* --- Errors & Color Inputs --- */
+#error-message,
+#error-category {
+  display: none;
+  background-color: rgba(239, 68, 68, 0.9);
+  color: var(--text-main);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 14px;
+  margin: 20px 0 10px;
+}
+
+#error-message.show,
+#error-category.show {
+  display: block;
+  animation: fadeIn 0.3s ease-in forwards;
+}
+#error-message.shake,
+#error-category.shake {
+  animation: shake 0.2s ease-in-out;
+}
+
+#category-color-input {
+  appearance: none;
+  width: 45px;
+  height: 45px;
+  border: 2px solid #e2e8f0;
+  border-radius: 20%;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+}
+
+#category-color-input:hover {
+  border-color: #cbd5e1;
+}
+#category-color-input:focus {
+  outline: none;
+  border-color: #ab32da;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+}
+
+#category-color-input::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+#category-color-input::-webkit-color-swatch,
+#category-color-input::-moz-color-swatch {
+  border: none;
+  border-radius: 15%;
+}
+
+/* --- Spinner & Utility --- */
+/* Loading spinner is from https://cssloaders.github.io/ */
+.loading-spinner {
+  --size: 1px;
+  width: calc(48 * var(--size));
+  height: calc(48 * var(--size));
+  border-radius: 50%;
+  display: inline-block;
+  border-top: calc(3 * var(--size)) solid var(--text-main);
+  border-right: calc(3 * var(--size)) solid transparent;
+  margin: 10px;
+  animation: rotation 1s linear infinite;
+}
+
+.loading-pos {
+  display: flex;
+  justify-content: center;
+}
+
+#deamur {
+  margin-top: auto;
+  padding-top: 20px;
+  display: flex;
+  flex-direction: column; /* Stacks children vertically */
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.footer-bottom {
+  font-size: 12px;
+}
+
+.footer-top {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+#deamur a {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+#deamur a:hover {
+  color: var(--text-main);
+}
+
+/* --- Keyframes & Media Queries --- */
+@keyframes rotation {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20%,
+  60% {
+    transform: translateX(-4px);
+  }
+  40%,
+  80% {
+    transform: translateX(4px);
+  }
+}
+
+@media (max-width: 640px) {
+  body {
+    padding: 20px 12px;
+  }
+  #todoContainer {
+    padding: 22px 16px;
+  }
+  #todo-fill,
+  #category-fill {
+    display: grid;
+    grid-template-columns: 1fr auto;
+  }
+  #todo-date-input,
+  #add-todo-button,
+  #add-category-button {
+    width: 100%;
+  }
+}
