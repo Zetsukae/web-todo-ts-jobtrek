@@ -225,7 +225,13 @@ const createRenderedTodoElement = (todo: Todo): HTMLLIElement =>
         saveFoldersToStorage(folders)
         renderTodos()
         renderFolders()
-      } finally {
+      } catch (error) {
+        console.error(`Error while deleting todo ${idToDelete}:`, error)
+        errorMessage.textContent =
+          'Failed to delete the todo. Please try again.'
+        errorMessage.classList.add('show', 'shake')
+      } 
+      finally {
         hideLoading()
         console.log('> Successful: Deleted Todo.')
       }
@@ -239,7 +245,13 @@ const createRenderedTodoElement = (todo: Todo): HTMLLIElement =>
           target.done = done
           renderTodos()
           renderFolders()
-        } finally {
+        } catch (error) {
+          console.error(`Error while updating todo ${idToToggle}:`, error)
+          errorMessage.textContent =
+            'Failed to update the todo. Please try again.'
+          errorMessage.classList.add('show', 'shake')
+        } 
+        finally {
           hideLoading()
           console.log("> Successful: To-do's action[checkbox].")
         }
@@ -285,6 +297,11 @@ const renderCategories = () => {
           if (editingCategoryId === idToDelete) {
             editingCategoryId = resetCategoryForm(categoryFormElements)
           }
+        } catch (error) {
+          console.error(`Error while deleting category ${idToDelete}:`, error)
+          errorMessage.textContent =
+            'Failed to delete the category. Please try again.'
+          errorMessage.classList.add('show', 'shake')
         } finally {
           hideLoading()
         }
