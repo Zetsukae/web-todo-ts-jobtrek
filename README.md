@@ -6,6 +6,8 @@
 
 [RestAPI documentation from RedHat](https://www.redhat.com/fr/topics/api/what-is-a-rest-api)
 
+[LocalStorage documentation from MDN](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage)
+
 ---
 
 # A brief description time
@@ -14,7 +16,7 @@
 
 - **Create to-dos** with specific dates and categories.
 
-- **Delete tyo-dos** whenever you want.
+- **Delete to-dos** whenever you want.
 
 - **Create and edit custom categories** using different colors.
 
@@ -25,6 +27,14 @@
 # How can I make my own?
 
 You can make it from scratch in **HTML/CSS/JS** (you can use other programming languages!) or use some template available online -> [I recommend this one!](https://github.com/Kaiserabbas/Todo-List-Template).
+
+---
+
+# How does my app currently work?
+
+![structure-app](https://i.imgur.com/O3VE7ye.png)
+
+My app communicate with the RestAPI for the backend, and to render the folder it's LocalStorage.
 
 ---
 
@@ -51,7 +61,7 @@ You can make it from scratch in **HTML/CSS/JS** (you can use other programming l
 1. Install the dependencies:
 
  ```bash
- pnpm install
+ pnpm install #or pnpm i
  ```
 
 1. Start the development server:

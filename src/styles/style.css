@@ -444,7 +444,7 @@ input[type="checkbox"]:checked::before {
   display: inline-block;
   border-top: calc(3 * var(--size)) solid var(--text-main);
   border-right: calc(3 * var(--size)) solid transparent;
-  margin-bottom: 20px;
+  margin: 10px;
   animation: rotation 1s linear infinite;
 }
 

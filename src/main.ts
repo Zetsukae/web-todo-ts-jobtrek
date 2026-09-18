@@ -428,6 +428,7 @@ const addTodoAction = async () => {
       hideLoading()
     }
   } else {
+    console.log('> Error: To-do nor date is empty.[err.77]')
     errorMessage.textContent =
       "Please enter both a to-do and a date. You can't do nothing about your life. . ."
     errorMessage.classList.add('show', 'shake')
@@ -440,6 +441,7 @@ const addFolderAction = () => {
   const folderText = folderInput.value.trim()
 
   if (!folderText) {
+    console.log('> Error: Folder name is empty.[err.77]')
     errorMessage.textContent =
       'Please enter a folder name. Need inspiration? Try OneShot!'
     errorMessage.classList.add('show', 'shake')
@@ -456,6 +458,7 @@ const addFolderAction = () => {
   folders.push(newFolder)
   saveFoldersToStorage(folders)
   renderFolders()
+  console.log('> Successful: Folder added.')
   folderInput.value = ''
   errorMessage.textContent = ''
   errorMessage.classList.remove('show', 'shake')
@@ -467,6 +470,7 @@ const addCategoryAction = async () => {
   const categoryChoiceColor = categoryColor.value
 
   if (!categoryText) {
+    console.log('> Error: Category name is empty.[err.77]')
     errorCategory.textContent = 'Please enter a category name.'
     errorCategory.classList.add('show', 'shake')
     return
@@ -559,6 +563,11 @@ deleteAllButton.addEventListener('click', async () => {
     renderTodos()
     renderCategories()
     renderFolders()
+  } catch (error) {
+    console.error("{tid.err:999;couldn'tDeleteAllData,TryAgain. }:", error)
+    errorMessage.textContent =
+      'Failed to delete all todos and categories. Please try again.'
+    errorMessage.classList.add('show', 'shake')
   } finally {
     hideLoading()
     console.log('> Successful: Deleted in LocalStorage & DB')
