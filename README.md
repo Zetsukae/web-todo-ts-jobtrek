@@ -1,8 +1,6 @@
 # Documents
 
-*Please before continuing take a look at these documents!*
-
-[Github Repository](https://github.com/Zetsukae/web-todo-ts-jobtrek)
+*Please before continuing take a look at these documentations!*
 
 [RestAPI documentation from RedHat](https://www.redhat.com/fr/topics/api/what-is-a-rest-api)
 
@@ -11,6 +9,10 @@
 ---
 
 # A brief description time
+
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
+![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css&logoColor=white)
 
 **The web app helps you organize your life!** Stop trying to keep everything you have to do in your head, give your brain a rest and write it down. Here's what my web app can do:
 
