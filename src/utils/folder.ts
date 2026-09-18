@@ -91,10 +91,12 @@ export const createFolderElement = (
   deleteButton.addEventListener('click', () => {
     onDelete(folder.id)
   })
-  
+
   const folderDropdown = document.createElement('button')
   folderDropdown.type = 'button'
-  folderDropdown.textContent = folder.isCollapsed ? FOLDER_ICONS.COLLAPSED : FOLDER_ICONS.EXPANDED
+  folderDropdown.textContent = folder.isCollapsed
+    ? FOLDER_ICONS.COLLAPSED
+    : FOLDER_ICONS.EXPANDED
   folderDropdown.className = 'folder-dropdown-btn'
   const folderContainerTodos = document.createElement('div')
   folderContainerTodos.className = 'folder-todos'
@@ -102,11 +104,12 @@ export const createFolderElement = (
 
   folderDropdown.addEventListener('click', () => {
     const isCollapsed = folderContainerTodos.style.display === 'none'
-    folderDropdown.textContent = isCollapsed ? FOLDER_ICONS.EXPANDED : FOLDER_ICONS.COLLAPSED
+    folderDropdown.textContent = isCollapsed
+      ? FOLDER_ICONS.EXPANDED
+      : FOLDER_ICONS.COLLAPSED
     folderContainerTodos.style.display = isCollapsed ? 'flex' : 'none'
     onToggle(folder.id, !isCollapsed)
   })
-
 
   const numberOfTodos = document.createElement('span')
   numberOfTodos.className = 'number-of-todos'
@@ -117,7 +120,6 @@ export const createFolderElement = (
     folderTodos.length > 0 && completedTodos === folderTodos.length,
   )
   numberOfTodos.textContent = `${completedTodos}/${folderTodos.length}`
-
 
   folderTodos.forEach((todo) => {
     folderContainerTodos.appendChild(createTodoElement(todo))
