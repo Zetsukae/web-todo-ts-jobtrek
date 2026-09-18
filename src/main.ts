@@ -230,8 +230,7 @@ const createRenderedTodoElement = (todo: Todo): HTMLLIElement =>
         errorMessage.textContent =
           'Failed to delete the todo. Please try again.'
         errorMessage.classList.add('show', 'shake')
-      } 
-      finally {
+      } finally {
         hideLoading()
         console.log('> Successful: Deleted Todo.')
       }
@@ -250,8 +249,7 @@ const createRenderedTodoElement = (todo: Todo): HTMLLIElement =>
           errorMessage.textContent =
             'Failed to update the todo. Please try again.'
           errorMessage.classList.add('show', 'shake')
-        } 
-        finally {
+        } finally {
           hideLoading()
           console.log("> Successful: To-do's action[checkbox].")
         }
