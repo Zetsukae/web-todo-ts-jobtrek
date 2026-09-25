@@ -75,7 +75,7 @@ The development server reloads automatically when you modify the source files.
 
 ---
 
-# Compile the project
+# Project compilation
 
 1. Run compilation and optimization:
 
