@@ -32,8 +32,8 @@ export const getFoldersFromStorage = (): Folder[] => {
       const candidate = folder as {
         id: string
         name: string
-        todoIds?: unknown
-        isCollapsed?: unknown
+        todoIds?: number[]
+        isCollapsed?: boolean
       }
 
       const todoIds = Array.isArray(candidate.todoIds)

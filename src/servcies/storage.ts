@@ -1,8 +1,12 @@
 import type { Category, Todo } from '../types/todo'
 
-const API_URL = 'https://api.todos.in.jt-lab.ch/todos'
-const CATEGORIES_API_URL = 'https://api.todos.in.jt-lab.ch/categories'
-const CATEGORIES_TODOS_URL = 'https://api.todos.in.jt-lab.ch/categories_todos'
+// Base URL for the API
+const API_BASE_URL = 'https://api.todos.in.jt-lab.ch'
+
+// Derive specific endpoints
+const API_URL = `${API_BASE_URL}/todos`
+const CATEGORIES_API_URL = `${API_BASE_URL}/categories`
+const CATEGORIES_TODOS_URL = `${API_BASE_URL}/categories_todos`
 
 export type CreateTodoInput = Omit<Todo, 'id'>
 export type CreateCategoryInput = Omit<Category, 'id'>
